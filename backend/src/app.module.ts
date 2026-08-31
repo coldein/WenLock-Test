@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -40,6 +41,8 @@ import { AppService } from './app.service';
         synchronize: false,
       }),
     }),
+
+    UsersModule,
   ],
 
   controllers: [AppController],
