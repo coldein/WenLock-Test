@@ -1,4 +1,7 @@
-import { ConflictException } from '@nestjs/common';
+import {
+    ConflictException,
+    NotFoundException,
+} from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { hash } from 'bcrypt';
@@ -52,18 +55,23 @@ describe('UsersService', () => {
             queryBuilderMock,
         );
 
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [
-                UsersService,
-                {
-                    provide: getRepositoryToken(User),
-                    useValue: usersRepositoryMock,
-                },
-            ],
-        }).compile();
+        const module: TestingModule =
+            await Test.createTestingModule({
+                providers: [
+                    UsersService,
+                    {
+                        provide: getRepositoryToken(User),
+                        useValue: usersRepositoryMock,
+                    },
+                ],
+            }).compile();
 
         service = module.get<UsersService>(UsersService);
     });
+
+    // =========================================================
+    // CADASTRO DE USUÁRIOS
+    // =========================================================
 
     it('deve cadastrar um usuário com a senha criptografada', async () => {
         usersRepositoryMock.findOne.mockResolvedValue(null);
@@ -88,7 +96,9 @@ describe('UsersService', () => {
 
         const result = await service.create(createUserDto);
 
-        expect(usersRepositoryMock.findOne).toHaveBeenCalledWith({
+        expect(
+            usersRepositoryMock.findOne,
+        ).toHaveBeenCalledWith({
             where: [
                 { email: createUserDto.email },
                 { registration: createUserDto.registration },
@@ -100,7 +110,9 @@ describe('UsersService', () => {
             10,
         );
 
-        expect(usersRepositoryMock.create).toHaveBeenCalledWith({
+        expect(
+            usersRepositoryMock.create,
+        ).toHaveBeenCalledWith({
             name: createUserDto.name,
             email: createUserDto.email,
             registration: createUserDto.registration,
@@ -156,6 +168,10 @@ describe('UsersService', () => {
         expect(usersRepositoryMock.save).not.toHaveBeenCalled();
     });
 
+    // =========================================================
+    // LISTAGEM DE USUÁRIOS
+    // =========================================================
+
     it('deve retornar usuários paginados', async () => {
         const users = [
             {
@@ -192,9 +208,13 @@ describe('UsersService', () => {
             usersRepositoryMock.createQueryBuilder,
         ).toHaveBeenCalledWith('user');
 
-        expect(queryBuilderMock.skip).toHaveBeenCalledWith(15);
+        expect(
+            queryBuilderMock.skip,
+        ).toHaveBeenCalledWith(15);
 
-        expect(queryBuilderMock.take).toHaveBeenCalledWith(15);
+        expect(
+            queryBuilderMock.take,
+        ).toHaveBeenCalledWith(15);
 
         expect(result.meta).toEqual({
             page: 2,
@@ -322,5 +342,81 @@ describe('UsersService', () => {
         expect(
             result.data[0],
         ).not.toHaveProperty('passwordHash');
+    });
+
+    // =========================================================
+    // CONSULTA DE USUÁRIO POR ID
+    // =========================================================
+
+    it('deve retornar um usuário pelo id', async () => {
+        const user = {
+            id: 1,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            registration: '000001',
+            passwordHash: 'hash-super-secreto',
+            createdAt: new Date('2026-08-31T10:00:00'),
+            updatedAt: new Date('2026-08-31T10:00:00'),
+        };
+
+        usersRepositoryMock.findOne.mockResolvedValue(user);
+
+        const result = await service.findOne(1);
+
+        expect(
+            usersRepositoryMock.findOne,
+        ).toHaveBeenCalledWith({
+            where: {
+                id: 1,
+            },
+        });
+
+        expect(result).toEqual({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            registration: user.registration,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        });
+    });
+
+    it('deve lançar NotFoundException quando o usuário não existir', async () => {
+        usersRepositoryMock.findOne.mockResolvedValue(null);
+
+        await expect(
+            service.findOne(999),
+        ).rejects.toThrow(
+            new NotFoundException(
+                'Usuário não encontrado',
+            ),
+        );
+
+        expect(
+            usersRepositoryMock.findOne,
+        ).toHaveBeenCalledWith({
+            where: {
+                id: 999,
+            },
+        });
+    });
+
+    it('não deve expor o hash da senha na consulta por id', async () => {
+        const user = {
+            id: 1,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            registration: '000001',
+            passwordHash: 'hash-super-secreto',
+            createdAt: new Date('2026-08-31T10:00:00'),
+            updatedAt: new Date('2026-08-31T10:00:00'),
+        };
+
+        usersRepositoryMock.findOne.mockResolvedValue(user);
+
+        const result = await service.findOne(1);
+
+        expect(result).not.toHaveProperty('password');
+        expect(result).not.toHaveProperty('passwordHash');
     });
 });
