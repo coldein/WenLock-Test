@@ -58,6 +58,31 @@ let UsersService = class UsersService {
             throw error;
         }
     }
+    async findAll(query) {
+        const { page, limit, name } = query;
+        const queryBuilder = this.usersRepository
+            .createQueryBuilder('user');
+        if (name) {
+            queryBuilder.where('user.name LIKE :name', {
+                name: `%${name}%`,
+            });
+        }
+        queryBuilder
+            .orderBy('user.name', 'ASC')
+            .addOrderBy('user.id', 'ASC')
+            .skip((page - 1) * limit)
+            .take(limit);
+        const [users, totalItems] = await queryBuilder.getManyAndCount();
+        return {
+            data: users.map((user) => user_response_dto_1.UserResponseDto.fromEntity(user)),
+            meta: {
+                page,
+                limit,
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+            },
+        };
+    }
     isDuplicateEntryError(error) {
         if (!(error instanceof typeorm_2.QueryFailedError)) {
             return false;
