@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { PaginatedUsersResponseDto } from './dto/paginated-users-response.dto';
@@ -130,5 +131,93 @@ export class UsersService {
     };
 
     return driverError?.code === 'ER_DUP_ENTRY';
+  }
+
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        'Usuário não encontrado',
+      );
+    }
+
+    if (
+      updateUserDto.email &&
+      updateUserDto.email !== user.email
+    ) {
+      const userWithSameEmail =
+        await this.usersRepository.findOne({
+          where: {
+            email: updateUserDto.email,
+          },
+        });
+
+      if (userWithSameEmail) {
+        throw new ConflictException(
+          'E-mail já cadastrado',
+        );
+      }
+    }
+
+    if (
+      updateUserDto.registration &&
+      updateUserDto.registration !== user.registration
+    ) {
+      const userWithSameRegistration =
+        await this.usersRepository.findOne({
+          where: {
+            registration: updateUserDto.registration,
+          },
+        });
+
+      if (userWithSameRegistration) {
+        throw new ConflictException(
+          'Matrícula já cadastrada',
+        );
+      }
+    }
+
+    if (updateUserDto.name !== undefined) {
+      user.name = updateUserDto.name;
+    }
+
+    if (updateUserDto.email !== undefined) {
+      user.email = updateUserDto.email;
+    }
+
+    if (updateUserDto.registration !== undefined) {
+      user.registration =
+        updateUserDto.registration;
+    }
+
+    if (updateUserDto.password !== undefined) {
+      user.passwordHash = await hash(
+        updateUserDto.password,
+        UsersService.PASSWORD_SALT_ROUNDS,
+      );
+    }
+
+    try {
+      const updatedUser =
+        await this.usersRepository.save(user);
+
+      return UserResponseDto.fromEntity(
+        updatedUser,
+      );
+    } catch (error: unknown) {
+      if (this.isDuplicateEntryError(error)) {
+        throw new ConflictException(
+          'E-mail ou matrícula já cadastrados',
+        );
+      }
+
+      throw error;
+    }
   }
 }

@@ -99,6 +99,59 @@ let UsersService = class UsersService {
         const driverError = error.driverError;
         return driverError?.code === 'ER_DUP_ENTRY';
     }
+    async update(id, updateUserDto) {
+        const user = await this.usersRepository.findOne({
+            where: { id },
+        });
+        if (!user) {
+            throw new common_1.NotFoundException('Usuário não encontrado');
+        }
+        if (updateUserDto.email &&
+            updateUserDto.email !== user.email) {
+            const userWithSameEmail = await this.usersRepository.findOne({
+                where: {
+                    email: updateUserDto.email,
+                },
+            });
+            if (userWithSameEmail) {
+                throw new common_1.ConflictException('E-mail já cadastrado');
+            }
+        }
+        if (updateUserDto.registration &&
+            updateUserDto.registration !== user.registration) {
+            const userWithSameRegistration = await this.usersRepository.findOne({
+                where: {
+                    registration: updateUserDto.registration,
+                },
+            });
+            if (userWithSameRegistration) {
+                throw new common_1.ConflictException('Matrícula já cadastrada');
+            }
+        }
+        if (updateUserDto.name !== undefined) {
+            user.name = updateUserDto.name;
+        }
+        if (updateUserDto.email !== undefined) {
+            user.email = updateUserDto.email;
+        }
+        if (updateUserDto.registration !== undefined) {
+            user.registration =
+                updateUserDto.registration;
+        }
+        if (updateUserDto.password !== undefined) {
+            user.passwordHash = await (0, bcrypt_1.hash)(updateUserDto.password, UsersService_1.PASSWORD_SALT_ROUNDS);
+        }
+        try {
+            const updatedUser = await this.usersRepository.save(user);
+            return user_response_dto_1.UserResponseDto.fromEntity(updatedUser);
+        }
+        catch (error) {
+            if (this.isDuplicateEntryError(error)) {
+                throw new common_1.ConflictException('E-mail ou matrícula já cadastrados');
+            }
+            throw error;
+        }
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = UsersService_1 = __decorate([

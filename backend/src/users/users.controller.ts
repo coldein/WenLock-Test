@@ -5,10 +5,12 @@ import {
     Param,
     ParseIntPipe,
     Post,
+    Patch,
     Query,
 } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { PaginatedUsersResponseDto } from './dto/paginated-users-response.dto';
@@ -40,5 +42,16 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number,
     ): Promise<UserResponseDto> {
         return this.usersService.findOne(id);
+    }
+
+    @Patch(':id')
+    update(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() updateUserDto: UpdateUserDto,
+    ): Promise<UserResponseDto> {
+        return this.usersService.update(
+            id,
+            updateUserDto,
+        );
     }
 }

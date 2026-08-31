@@ -1,5 +1,6 @@
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { PaginatedUsersResponseDto } from './dto/paginated-users-response.dto';
@@ -12,4 +13,5 @@ export declare class UsersService {
     findAll(query: FindUsersQueryDto): Promise<PaginatedUsersResponseDto>;
     findOne(id: number): Promise<UserResponseDto>;
     private isDuplicateEntryError;
+    update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto>;
 }
