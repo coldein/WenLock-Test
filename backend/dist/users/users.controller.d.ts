@@ -8,4 +8,5 @@ export declare class UsersController {
     constructor(usersService: UsersService);
     create(createUserDto: CreateUserDto): Promise<UserResponseDto>;
     findAll(query: FindUsersQueryDto): Promise<PaginatedUsersResponseDto>;
+    findOne(id: number): Promise<UserResponseDto>;
 }

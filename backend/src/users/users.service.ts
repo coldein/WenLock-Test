@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
@@ -105,6 +106,18 @@ export class UsersService {
         totalPages: Math.ceil(totalItems / limit),
       },
     };
+  }
+
+  async findOne(id: number): Promise<UserResponseDto> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return UserResponseDto.fromEntity(user);
   }
 
   private isDuplicateEntryError(error: unknown): boolean {

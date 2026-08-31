@@ -10,5 +10,6 @@ export declare class UsersService {
     constructor(usersRepository: Repository<User>);
     create(createUserDto: CreateUserDto): Promise<UserResponseDto>;
     findAll(query: FindUsersQueryDto): Promise<PaginatedUsersResponseDto>;
+    findOne(id: number): Promise<UserResponseDto>;
     private isDuplicateEntryError;
 }

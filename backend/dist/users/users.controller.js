@@ -28,6 +28,9 @@ let UsersController = class UsersController {
     findAll(query) {
         return this.usersService.findAll(query);
     }
+    findOne(id) {
+        return this.usersService.findOne(id);
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -44,6 +47,13 @@ __decorate([
     __metadata("design:paramtypes", [find_users_query_dto_1.FindUsersQueryDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "findOne", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])

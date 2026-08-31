@@ -2,6 +2,8 @@ import {
     Body,
     Controller,
     Get,
+    Param,
+    ParseIntPipe,
     Post,
     Query,
 } from '@nestjs/common';
@@ -31,5 +33,12 @@ export class UsersController {
         @Query() query: FindUsersQueryDto,
     ): Promise<PaginatedUsersResponseDto> {
         return this.usersService.findAll(query);
+    }
+
+    @Get(':id')
+    findOne(
+        @Param('id', ParseIntPipe) id: number,
+    ): Promise<UserResponseDto> {
+        return this.usersService.findOne(id);
     }
 }

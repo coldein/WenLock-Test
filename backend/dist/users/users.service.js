@@ -83,6 +83,15 @@ let UsersService = class UsersService {
             },
         };
     }
+    async findOne(id) {
+        const user = await this.usersRepository.findOne({
+            where: { id },
+        });
+        if (!user) {
+            throw new common_1.NotFoundException('Usuário não encontrado');
+        }
+        return user_response_dto_1.UserResponseDto.fromEntity(user);
+    }
     isDuplicateEntryError(error) {
         if (!(error instanceof typeorm_2.QueryFailedError)) {
             return false;
