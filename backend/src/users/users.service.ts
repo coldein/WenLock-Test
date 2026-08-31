@@ -11,6 +11,8 @@ import {
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { PaginatedUsersResponseDto } from './dto/paginated-users-response.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -20,7 +22,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const existingUser = await this.usersRepository.findOne({
@@ -63,6 +65,46 @@ export class UsersService {
 
       throw error;
     }
+  }
+
+  async findAll(
+    query: FindUsersQueryDto,
+  ): Promise<PaginatedUsersResponseDto> {
+    const { page, limit, name } = query;
+
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder('user');
+
+    if (name) {
+      queryBuilder.where(
+        'user.name LIKE :name',
+        {
+          name: `%${name}%`,
+        },
+      );
+    }
+
+    queryBuilder
+      .orderBy('user.name', 'ASC')
+      .addOrderBy('user.id', 'ASC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    const [users, totalItems] =
+      await queryBuilder.getManyAndCount();
+
+    return {
+      data: users.map((user) =>
+        UserResponseDto.fromEntity(user),
+      ),
+
+      meta: {
+        page,
+        limit,
+        totalItems,
+        totalPages: Math.ceil(totalItems / limit),
+      },
+    };
   }
 
   private isDuplicateEntryError(error: unknown): boolean {
