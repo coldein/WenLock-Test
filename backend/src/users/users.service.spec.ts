@@ -14,10 +14,20 @@ jest.mock('bcrypt', () => ({
 describe('UsersService', () => {
     let service: UsersService;
 
+    const queryBuilderMock = {
+        where: jest.fn(),
+        orderBy: jest.fn(),
+        addOrderBy: jest.fn(),
+        skip: jest.fn(),
+        take: jest.fn(),
+        getManyAndCount: jest.fn(),
+    };
+
     const usersRepositoryMock = {
         findOne: jest.fn(),
         create: jest.fn(),
         save: jest.fn(),
+        createQueryBuilder: jest.fn(),
     };
 
     const hashMock = hash as jest.Mock;
@@ -30,6 +40,18 @@ describe('UsersService', () => {
     };
 
     beforeEach(async () => {
+        jest.clearAllMocks();
+
+        queryBuilderMock.where.mockReturnValue(queryBuilderMock);
+        queryBuilderMock.orderBy.mockReturnValue(queryBuilderMock);
+        queryBuilderMock.addOrderBy.mockReturnValue(queryBuilderMock);
+        queryBuilderMock.skip.mockReturnValue(queryBuilderMock);
+        queryBuilderMock.take.mockReturnValue(queryBuilderMock);
+
+        usersRepositoryMock.createQueryBuilder.mockReturnValue(
+            queryBuilderMock,
+        );
+
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 UsersService,
@@ -41,8 +63,6 @@ describe('UsersService', () => {
         }).compile();
 
         service = module.get<UsersService>(UsersService);
-
-        jest.clearAllMocks();
     });
 
     it('deve cadastrar um usuário com a senha criptografada', async () => {
@@ -134,5 +154,173 @@ describe('UsersService', () => {
 
         expect(hashMock).not.toHaveBeenCalled();
         expect(usersRepositoryMock.save).not.toHaveBeenCalled();
+    });
+
+    it('deve retornar usuários paginados', async () => {
+        const users = [
+            {
+                id: 1,
+                name: 'Ana Silva',
+                email: 'ana@email.com',
+                registration: '000001',
+                passwordHash: 'hash-1',
+                createdAt: new Date('2026-08-31T10:00:00'),
+                updatedAt: new Date('2026-08-31T10:00:00'),
+            },
+            {
+                id: 2,
+                name: 'Bruno Souza',
+                email: 'bruno@email.com',
+                registration: '000002',
+                passwordHash: 'hash-2',
+                createdAt: new Date('2026-08-31T10:00:00'),
+                updatedAt: new Date('2026-08-31T10:00:00'),
+            },
+        ];
+
+        queryBuilderMock.getManyAndCount.mockResolvedValue([
+            users,
+            32,
+        ]);
+
+        const result = await service.findAll({
+            page: 2,
+            limit: 15,
+        });
+
+        expect(
+            usersRepositoryMock.createQueryBuilder,
+        ).toHaveBeenCalledWith('user');
+
+        expect(queryBuilderMock.skip).toHaveBeenCalledWith(15);
+
+        expect(queryBuilderMock.take).toHaveBeenCalledWith(15);
+
+        expect(result.meta).toEqual({
+            page: 2,
+            limit: 15,
+            totalItems: 32,
+            totalPages: 3,
+        });
+
+        expect(result.data).toHaveLength(2);
+    });
+
+    it('deve aplicar pesquisa parcial por nome', async () => {
+        queryBuilderMock.getManyAndCount.mockResolvedValue([
+            [],
+            0,
+        ]);
+
+        await service.findAll({
+            page: 1,
+            limit: 15,
+            name: 'João',
+        });
+
+        expect(
+            queryBuilderMock.where,
+        ).toHaveBeenCalledWith(
+            'user.name LIKE :name',
+            {
+                name: '%João%',
+            },
+        );
+    });
+
+    it('não deve aplicar filtro de nome quando a pesquisa não for informada', async () => {
+        queryBuilderMock.getManyAndCount.mockResolvedValue([
+            [],
+            0,
+        ]);
+
+        await service.findAll({
+            page: 1,
+            limit: 15,
+        });
+
+        expect(
+            queryBuilderMock.where,
+        ).not.toHaveBeenCalled();
+    });
+
+    it('deve ordenar usuários por nome e id', async () => {
+        queryBuilderMock.getManyAndCount.mockResolvedValue([
+            [],
+            0,
+        ]);
+
+        await service.findAll({
+            page: 1,
+            limit: 15,
+        });
+
+        expect(
+            queryBuilderMock.orderBy,
+        ).toHaveBeenCalledWith(
+            'user.name',
+            'ASC',
+        );
+
+        expect(
+            queryBuilderMock.addOrderBy,
+        ).toHaveBeenCalledWith(
+            'user.id',
+            'ASC',
+        );
+    });
+
+    it('deve retornar estrutura paginada vazia quando não houver usuários', async () => {
+        queryBuilderMock.getManyAndCount.mockResolvedValue([
+            [],
+            0,
+        ]);
+
+        const result = await service.findAll({
+            page: 1,
+            limit: 15,
+        });
+
+        expect(result).toEqual({
+            data: [],
+            meta: {
+                page: 1,
+                limit: 15,
+                totalItems: 0,
+                totalPages: 0,
+            },
+        });
+    });
+
+    it('não deve expor o hash da senha na listagem', async () => {
+        const user = {
+            id: 1,
+            name: 'Ana Silva',
+            email: 'ana@email.com',
+            registration: '000001',
+            passwordHash: 'hash-super-secreto',
+            createdAt: new Date('2026-08-31T10:00:00'),
+            updatedAt: new Date('2026-08-31T10:00:00'),
+        };
+
+        queryBuilderMock.getManyAndCount.mockResolvedValue([
+            [user],
+            1,
+        ]);
+
+        const result = await service.findAll({
+            page: 1,
+            limit: 15,
+        });
+
+        expect(result.data).toHaveLength(1);
+
+        expect(
+            result.data[0],
+        ).not.toHaveProperty('password');
+
+        expect(
+            result.data[0],
+        ).not.toHaveProperty('passwordHash');
     });
 });
