@@ -1,165 +1,455 @@
 .layout {
     min-height: 100vh;
-    display: flex;
     background: var(--color-background);
 }
 
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
 .sidebar {
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0 auto 0 0;
 
-    width: 240px;
-    height: 100vh;
+    width: 235px;
+    min-height: 100vh;
 
     display: flex;
     flex-direction: column;
 
+    padding: 22px 10px 20px;
+
     background: var(--color-sidebar);
     color: #ffffff;
 
-    padding: 28px 18px 22px;
+    transition: width 0.25s ease;
 
-    box-shadow:
-        4px 0 18px rgba(15, 28, 46, 0.08);
+    overflow: visible;
 
-    z-index: 10;
+    z-index: 20;
 }
+
+.sidebar.collapsed {
+    width: 72px;
+}
+
+/* =========================================================
+   LOGO
+   ========================================================= */
 
 .brand {
+    height: 60px;
+
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: flex-start;
 
-    padding: 0 8px 30px;
+    padding: 0 15px;
+
+    overflow: hidden;
+
+    transition:
+        padding 0.25s ease,
+        justify-content 0.25s ease;
 }
 
-.brandMark {
-    width: 42px;
-    height: 42px;
+.logoExpanded {
+    display: block;
+
+    width: 145px;
+    max-width: 100%;
+    height: auto;
+
+    object-fit: contain;
+}
+
+.logoCollapsed {
+    display: block;
+
+    width: 38px;
+    height: 38px;
+
+    object-fit: contain;
+}
+
+.collapsed .brand {
+    justify-content: center;
+
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* =========================================================
+   BOTÃO RECOLHER
+   ========================================================= */
+
+.collapseButton {
+    position: absolute;
+
+    top: 34px;
+    right: -14px;
+
+    width: 28px;
+    height: 28px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    border-radius: 12px;
+    padding: 0;
 
-    background: var(--color-primary);
-    color: var(--color-sidebar);
+    border: 0;
+    border-radius: 50%;
 
-    font-size: 20px;
-    font-weight: 800;
+    background: #f4f7f8;
+    color: var(--color-muted);
+
+    box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.13);
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+
+    z-index: 30;
 }
 
-.brandName {
-    font-size: 21px;
-    font-weight: 700;
-    letter-spacing: 0.2px;
+.collapseButton:hover {
+    background: #ffffff;
+    color: var(--color-primary);
 }
+
+/* =========================================================
+   NAVEGAÇÃO
+   ========================================================= */
 
 .navigation {
     display: flex;
     flex-direction: column;
+
     gap: 8px;
+
+    margin-top: 5px;
 }
 
 .navItem {
-    min-height: 48px;
+    height: 40px;
 
     display: flex;
     align-items: center;
-    gap: 14px;
 
-    padding: 0 14px;
+    gap: 10px;
 
-    border-radius: 9px;
+    padding: 0 13px;
 
-    color: var(--color-sidebar-text);
+    border-radius: 4px;
+
+    color: #b5becd;
+
+    font-size: 12px;
+    font-weight: 600;
+
     text-decoration: none;
 
-    font-size: 14px;
-    font-weight: 500;
+    white-space: nowrap;
 
     transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.collapsed .navItem {
+    justify-content: center;
+
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .navItem:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.06);
     color: #ffffff;
 }
 
 .navItem.active {
-    background: rgba(34, 211, 238, 0.12);
+    background: var(--color-primary);
+    color: var(--color-sidebar);
+}
+
+/* =========================================================
+   GRUPO DE MENU
+   ========================================================= */
+
+.menuGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.menuGroupTitle {
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 13px;
+
+    color: #a9b2c1;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.menuGroupContent {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+.subMenuItem {
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-left: 27px;
+    padding: 0 13px;
+
+    border-radius: 4px;
+
+    color: #d0d6df;
+
+    font-size: 12px;
+    font-weight: 400;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    transition:
+        color 0.15s ease,
+        background 0.15s ease;
+}
+
+.subMenuItem:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+.subMenuActive {
     color: var(--color-primary);
 }
 
-.navItem.active::before {
-    content: '';
+/* =========================================================
+   FOOTER DA SIDEBAR
+   ========================================================= */
 
+.sidebarFooter {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    margin-top: auto;
+
+    padding: 0 15px;
+
+    color: #ffffff;
+
+    font-size: 9px;
+
+    white-space: nowrap;
+}
+
+.sidebarFooter strong {
+    font-size: 11px;
+}
+
+.sidebarFooter span {
+    color: #9ba7b8;
+}
+
+/* =========================================================
+   ÁREA PRINCIPAL
+   ========================================================= */
+
+.workspace {
+    min-height: 100vh;
+
+    margin-left: 235px;
+
+    transition: margin-left 0.25s ease;
+}
+
+.workspaceCollapsed {
+    margin-left: 72px;
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar {
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 38px;
+
+    background: var(--color-surface);
+
+    border-bottom: 1px solid #e5e5e5;
+
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.08);
+
+    position: relative;
+
+    z-index: 10;
+}
+
+.profile {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+
+    background: var(--color-sidebar);
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.onlineIndicator {
     position: absolute;
-    left: 0;
 
-    width: 4px;
-    height: 28px;
+    right: -1px;
+    bottom: -1px;
 
-    border-radius: 0 4px 4px 0;
+    width: 10px;
+    height: 10px;
+
+    border: 2px solid #ffffff;
+    border-radius: 50%;
 
     background: var(--color-primary);
 }
 
-.sidebarFooter {
-    margin-top: auto;
-
-    padding: 20px 10px 0;
-
-    border-top:
-        1px solid rgba(255, 255, 255, 0.08);
-
-    color: #728098;
-
-    font-size: 12px;
-}
+/* =========================================================
+   CONTEÚDO
+   ========================================================= */
 
 .main {
-    flex: 1;
+    min-height: calc(100vh - 58px);
 
-    margin-left: 240px;
+    padding: 18px 32px 32px;
 
-    min-width: 0;
-    min-height: 100vh;
-
-    padding: 38px 44px;
+    background: var(--color-background);
 }
 
-@media (max-width: 900px) {
-    .sidebar {
-        width: 80px;
-        padding-left: 12px;
-        padding-right: 12px;
-    }
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
 
-    .brandName,
-    .navItem span,
-    .sidebarFooter {
-        display: none;
+@media (max-width: 768px) {
+    .sidebar {
+        width: 72px;
+
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .brand {
         justify-content: center;
+
         padding-left: 0;
         padding-right: 0;
     }
 
+    .logoExpanded {
+        width: 42px;
+        max-height: 42px;
+    }
+
+    .logoCollapsed {
+        width: 38px;
+        height: 38px;
+    }
+
+    .sidebarFooter {
+        display: none;
+    }
+
+    .menuGroupTitle span,
+    .menuGroupTitle>svg {
+        display: none;
+    }
+
+    .menuGroupTitle {
+        justify-content: center;
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .menuGroupContent {
+        justify-content: center;
+    }
+
     .navItem {
         justify-content: center;
-        padding: 0;
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .subMenuItem {
+        justify-content: center;
+
+        margin-left: 0;
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .subMenuItem span {
+        display: none;
+    }
+
+    .workspace,
+    .workspaceCollapsed {
+        margin-left: 72px;
+    }
+
+    .collapseButton {
+        display: none;
     }
 
     .main {
-        margin-left: 80px;
-        padding: 28px 24px;
+        padding: 18px;
+    }
+
+    .topbar {
+        padding: 0 20px;
     }
 }

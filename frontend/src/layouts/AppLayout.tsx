@@ -1,7 +1,12 @@
 import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Home,
-  UsersRound,
+  KeyRound,
+  UserRound,
 } from 'lucide-react';
+import { useState } from 'react';
 import {
   NavLink,
   Outlet,
@@ -10,18 +15,49 @@ import {
 import styles from './AppLayout.module.css';
 
 export function AppLayout() {
+  const [collapsed, setCollapsed] =
+    useState(false);
+
   return (
     <div className={styles.layout}>
-      <aside className={styles.sidebar}>
+      <aside
+        className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''
+          }`}
+      >
         <div className={styles.brand}>
-          <div className={styles.brandMark}>
-            W
-          </div>
-
-          <span className={styles.brandName}>
-            WenLock
-          </span>
+          <img
+            className={
+              collapsed
+                ? styles.logoCollapsed
+                : styles.logoExpanded
+            }
+            src={
+              collapsed
+                ? '/assets/wenlock-collapsed.svg'
+                : '/assets/wenlock-expanded.svg'
+            }
+            alt="WenLock"
+          />
         </div>
+
+        <button
+          type="button"
+          className={styles.collapseButton}
+          onClick={() =>
+            setCollapsed((current) => !current)
+          }
+          aria-label={
+            collapsed
+              ? 'Expandir menu'
+              : 'Recolher menu'
+          }
+        >
+          {collapsed ? (
+            <ChevronRight size={18} />
+          ) : (
+            <ChevronLeft size={18} />
+          )}
+        </button>
 
         <nav className={styles.navigation}>
           <NavLink
@@ -32,34 +68,98 @@ export function AppLayout() {
               }`
             }
           >
-            <Home size={20} />
+            <Home size={18} />
 
-            <span>Home</span>
+            {!collapsed && <span>Home</span>}
           </NavLink>
 
-          <NavLink
-            to="/users"
-            className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.active : ''
-              }`
-            }
-          >
-            <UsersRound size={20} />
+          <div className={styles.menuGroup}>
+            <div className={styles.menuGroupTitle}>
+              <div
+                className={styles.menuGroupContent}
+              >
+                <KeyRound size={17} />
 
-            <span>Usuários</span>
-          </NavLink>
+                {!collapsed && (
+                  <span>
+                    Controle de Acesso
+                  </span>
+                )}
+              </div>
+
+              {!collapsed && (
+                <ChevronDown size={15} />
+              )}
+            </div>
+
+            {!collapsed && (
+              <NavLink
+                to="/users"
+                className={({ isActive }) =>
+                  `${styles.subMenuItem
+                  } ${isActive
+                    ? styles.subMenuActive
+                    : ''
+                  }`
+                }
+              >
+                <UserRound size={17} />
+                <span>Usuários</span>
+              </NavLink>
+            )}
+
+            {collapsed && (
+              <NavLink
+                to="/users"
+                className={({ isActive }) =>
+                  `${styles.navItem} ${isActive
+                    ? styles.active
+                    : ''
+                  }`
+                }
+                aria-label="Usuários"
+              >
+                <UserRound size={18} />
+              </NavLink>
+            )}
+          </div>
         </nav>
 
-        <div className={styles.sidebarFooter}>
-          <span>
-            WenLock Test
-          </span>
-        </div>
+        {!collapsed && (
+          <footer className={styles.sidebarFooter}>
+            <strong>© WenLock</strong>
+
+            <span>
+              Power by Conecthus
+            </span>
+
+            <span>V 0.0.0</span>
+          </footer>
+        )}
       </aside>
 
-      <main className={styles.main}>
-        <Outlet />
-      </main>
+      <div
+        className={`${styles.workspace} ${collapsed
+            ? styles.workspaceCollapsed
+            : ''
+          }`}
+      >
+        <header className={styles.topbar}>
+          <div />
+
+          <div className={styles.profile}>
+            <div className={styles.avatar}>
+              MS
+            </div>
+
+            <span className={styles.onlineIndicator} />
+          </div>
+        </header>
+
+        <main className={styles.main}>
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
