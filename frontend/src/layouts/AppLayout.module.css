@@ -1,0 +1,165 @@
+.layout {
+    min-height: 100vh;
+    display: flex;
+    background: var(--color-background);
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 240px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--color-sidebar);
+    color: #ffffff;
+
+    padding: 28px 18px 22px;
+
+    box-shadow:
+        4px 0 18px rgba(15, 28, 46, 0.08);
+
+    z-index: 10;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 0 8px 30px;
+}
+
+.brandMark {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--color-primary);
+    color: var(--color-sidebar);
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.brandName {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.navItem {
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 0 14px;
+
+    border-radius: 9px;
+
+    color: var(--color-sidebar-text);
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.navItem:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+}
+
+.navItem.active {
+    background: rgba(34, 211, 238, 0.12);
+    color: var(--color-primary);
+}
+
+.navItem.active::before {
+    content: '';
+
+    position: absolute;
+    left: 0;
+
+    width: 4px;
+    height: 28px;
+
+    border-radius: 0 4px 4px 0;
+
+    background: var(--color-primary);
+}
+
+.sidebarFooter {
+    margin-top: auto;
+
+    padding: 20px 10px 0;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    color: #728098;
+
+    font-size: 12px;
+}
+
+.main {
+    flex: 1;
+
+    margin-left: 240px;
+
+    min-width: 0;
+    min-height: 100vh;
+
+    padding: 38px 44px;
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 80px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .brandName,
+    .navItem span,
+    .sidebarFooter {
+        display: none;
+    }
+
+    .brand {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .navItem {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .main {
+        margin-left: 80px;
+        padding: 28px 24px;
+    }
+}

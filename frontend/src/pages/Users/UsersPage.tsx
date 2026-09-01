@@ -1,11 +1,14 @@
 export function UsersPage() {
   return (
-    <div>
-      <h2>Usuários</h2>
+    <>
+      <header>
+        <h1>Usuários</h1>
 
-      <p>
-        Listagem de usuários.
-      </p>
-    </div>
+        <p>
+          Consulte e gerencie os usuários
+          cadastrados no sistema.
+        </p>
+      </header>
+    </>
   );
 }
