@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateUserDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class UpdateUserDto {
     name;
     email;
@@ -20,6 +21,11 @@ class UpdateUserDto {
 }
 exports.UpdateUserDto = UpdateUserDto;
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'João Santos',
+        description: 'Novo nome do usuário',
+        maxLength: 150,
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_transformer_1.Transform)(({ value }) => typeof value === 'string' ? value.trim() : value),
     (0, class_validator_1.IsString)(),
@@ -30,6 +36,11 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'joao.santos@email.com',
+        description: 'Novo e-mail do usuário',
+        maxLength: 254,
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_transformer_1.Transform)(({ value }) => typeof value === 'string'
         ? value.trim().toLowerCase()
@@ -41,6 +52,11 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: '000002',
+        description: 'Nova matrícula numérica do usuário',
+        maxLength: 20,
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_transformer_1.Transform)(({ value }) => typeof value === 'string' ? value.trim() : value),
     (0, class_validator_1.IsString)(),
@@ -51,6 +67,12 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "registration", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'xyz123',
+        description: 'Nova senha alfanumérica com exatamente 6 caracteres',
+        minLength: 6,
+        maxLength: 6,
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(6, 6, {
