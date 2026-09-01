@@ -419,4 +419,270 @@ describe('UsersService', () => {
         expect(result).not.toHaveProperty('password');
         expect(result).not.toHaveProperty('passwordHash');
     });
+
+    // =========================================================
+    // ATUALIZAÇÃO DE USUÁRIOS
+    // =========================================================
+
+    it('deve atualizar parcialmente um usuário', async () => {
+        const user = {
+            id: 1,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            registration: '000001',
+            passwordHash: 'hash-atual',
+            createdAt: new Date('2026-08-31T10:00:00'),
+            updatedAt: new Date('2026-08-31T10:00:00'),
+        };
+
+        usersRepositoryMock.findOne.mockResolvedValue(user);
+
+        usersRepositoryMock.save.mockImplementation(
+            async (updatedUser) => updatedUser,
+        );
+
+        const result = await service.update(1, {
+            name: 'João Santos',
+        });
+
+        expect(
+            usersRepositoryMock.findOne,
+        ).toHaveBeenCalledWith({
+            where: {
+                id: 1,
+            },
+        });
+
+        expect(
+            usersRepositoryMock.save,
+        ).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 1,
+                name: 'João Santos',
+                email: 'joao@email.com',
+                registration: '000001',
+            }),
+        );
+
+        expect(result.name).toBe('João Santos');
+
+        expect(hashMock).not.toHaveBeenCalled();
+
+        expect(result).not.toHaveProperty('password');
+        expect(result).not.toHaveProperty('passwordHash');
+    });
+
+    it('deve lançar NotFoundException ao atualizar usuário inexistente', async () => {
+        usersRepositoryMock.findOne.mockResolvedValue(null);
+
+        await expect(
+            service.update(999, {
+                name: 'Usuário Teste',
+            }),
+        ).rejects.toThrow(
+            new NotFoundException(
+                'Usuário não encontrado',
+            ),
+        );
+
+        expect(
+            usersRepositoryMock.save,
+        ).not.toHaveBeenCalled();
+    });
+
+    it('deve rejeitar atualização quando o novo e-mail já estiver cadastrado', async () => {
+        const user = {
+            id: 1,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            registration: '000001',
+            passwordHash: 'hash',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        const existingUser = {
+            id: 2,
+            name: 'Maria Silva',
+            email: 'maria@email.com',
+            registration: '000002',
+        };
+
+        usersRepositoryMock.findOne
+            .mockResolvedValueOnce(user)
+            .mockResolvedValueOnce(existingUser);
+
+        await expect(
+            service.update(1, {
+                email: 'maria@email.com',
+            }),
+        ).rejects.toThrow(
+            new ConflictException(
+                'E-mail já cadastrado',
+            ),
+        );
+
+        expect(
+            usersRepositoryMock.findOne,
+        ).toHaveBeenNthCalledWith(
+            2,
+            {
+                where: {
+                    email: 'maria@email.com',
+                },
+            },
+        );
+
+        expect(
+            usersRepositoryMock.save,
+        ).not.toHaveBeenCalled();
+    });
+
+    it('deve rejeitar atualização quando a nova matrícula já estiver cadastrada', async () => {
+        const user = {
+            id: 1,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            registration: '000001',
+            passwordHash: 'hash',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        const existingUser = {
+            id: 2,
+            name: 'Maria Silva',
+            email: 'maria@email.com',
+            registration: '000002',
+        };
+
+        usersRepositoryMock.findOne
+            .mockResolvedValueOnce(user)
+            .mockResolvedValueOnce(existingUser);
+
+        await expect(
+            service.update(1, {
+                registration: '000002',
+            }),
+        ).rejects.toThrow(
+            new ConflictException(
+                'Matrícula já cadastrada',
+            ),
+        );
+
+        expect(
+            usersRepositoryMock.findOne,
+        ).toHaveBeenNthCalledWith(
+            2,
+            {
+                where: {
+                    registration: '000002',
+                },
+            },
+        );
+
+        expect(
+            usersRepositoryMock.save,
+        ).not.toHaveBeenCalled();
+    });
+
+    it('não deve verificar duplicidade quando o e-mail não for alterado', async () => {
+        const user = {
+            id: 1,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            registration: '000001',
+            passwordHash: 'hash',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        usersRepositoryMock.findOne.mockResolvedValue(user);
+
+        usersRepositoryMock.save.mockImplementation(
+            async (updatedUser) => updatedUser,
+        );
+
+        await service.update(1, {
+            email: 'joao@email.com',
+        });
+
+        expect(
+            usersRepositoryMock.findOne,
+        ).toHaveBeenCalledTimes(1);
+
+        expect(
+            usersRepositoryMock.save,
+        ).toHaveBeenCalled();
+    });
+
+    it('não deve verificar duplicidade quando a matrícula não for alterada', async () => {
+        const user = {
+            id: 1,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            registration: '000001',
+            passwordHash: 'hash',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        usersRepositoryMock.findOne.mockResolvedValue(user);
+
+        usersRepositoryMock.save.mockImplementation(
+            async (updatedUser) => updatedUser,
+        );
+
+        await service.update(1, {
+            registration: '000001',
+        });
+
+        expect(
+            usersRepositoryMock.findOne,
+        ).toHaveBeenCalledTimes(1);
+
+        expect(
+            usersRepositoryMock.save,
+        ).toHaveBeenCalled();
+    });
+
+    it('deve gerar novo hash quando a senha for atualizada', async () => {
+        const user = {
+            id: 1,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            registration: '000001',
+            passwordHash: 'hash-antigo',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        usersRepositoryMock.findOne.mockResolvedValue(user);
+
+        hashMock.mockResolvedValue('hash-novo');
+
+        usersRepositoryMock.save.mockImplementation(
+            async (updatedUser) => updatedUser,
+        );
+
+        const result = await service.update(1, {
+            password: 'xyz123',
+        });
+
+        expect(hashMock).toHaveBeenCalledWith(
+            'xyz123',
+            10,
+        );
+
+        expect(
+            usersRepositoryMock.save,
+        ).toHaveBeenCalledWith(
+            expect.objectContaining({
+                passwordHash: 'hash-novo',
+            }),
+        );
+
+        expect(result).not.toHaveProperty('password');
+        expect(result).not.toHaveProperty('passwordHash');
+    });
 });
