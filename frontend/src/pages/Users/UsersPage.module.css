@@ -416,65 +416,109 @@
    PAGINAÇÃO
    ========================================================= */
 
-.pagination {
+.paginationBar {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
 
-    gap: 5px;
+    gap: 16px;
 
-    margin-top: 5px;
+    margin-top: 12px;
+
+    color: var(--color-text);
+
+    font-size: 11px;
+    font-weight: 400;
 }
 
-.paginationButton,
-.currentPage {
-    width: 30px;
-    height: 30px;
+.paginationSummary {
+    color: var(--color-text);
+    font-size: 11px;
+    line-height: 16px;
+}
 
+.paginationSummary strong {
+    font-weight: 600;
+}
+
+.paginationControls {
     display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pageSizeText {
+    color: var(--color-text);
+    font-size: 11px;
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+.pageSizeText strong {
+    font-weight: 600;
+}
+
+.totalPagesText {
+    color: var(--color-text);
+    font-size: 11px;
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+.totalPagesText strong {
+    font-weight: 600;
+}
+
+.paginationIconButton {
+    width: 24px;
+    height: 24px;
+
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    border-radius: 3px;
-}
-
-.paginationButton {
     padding: 0;
 
-    border: 1px solid #dfe3e5;
+    border: 0;
+    background: transparent;
 
-    background: #ffffff;
-    color: var(--color-sidebar);
+    color: #6f7d7d;
 
     cursor: pointer;
 
     transition:
-        border-color 0.15s ease,
+        color 0.15s ease,
         background 0.15s ease,
-        color 0.15s ease;
+        opacity 0.15s ease;
 }
 
-.paginationButton:hover:not(:disabled) {
-    border-color: var(--color-primary);
-
-    background:
-        rgba(0, 170, 193, 0.05);
-
-    color: var(--color-primary-dark);
+.paginationIconButton:hover:not(:disabled) {
+    color: var(--color-sidebar);
 }
 
-.paginationButton:disabled {
+.paginationIconButton:disabled {
     opacity: 0.35;
-
     cursor: not-allowed;
 }
 
 .currentPage {
-    background: var(--color-primary);
-    color: var(--color-sidebar);
+    min-width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 8px;
+
+    border-radius: 4px;
+
+    background: var(--color-primary-dark);
+    color: #ffffff;
 
     font-size: 11px;
     font-weight: 700;
+    line-height: 16px;
 }
 
 /* =========================================================
@@ -499,11 +543,12 @@
         min-width: 430px;
     }
 
-    .emptyState {
-        min-height: 260px;
+    .paginationBar {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .emptyIllustration {
-        width: 125px;
+    .paginationControls {
+        flex-wrap: wrap;
     }
 }

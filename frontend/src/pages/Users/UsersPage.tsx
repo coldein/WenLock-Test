@@ -2,6 +2,8 @@ import axios from 'axios';
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   Eye,
   Pencil,
   Plus,
@@ -81,8 +83,6 @@ export function UsersPage() {
 
   /*
    * Usuário selecionado para visualização.
-   * Guardamos somente o ID porque o drawer
-   * consulta os dados atualizados na API.
    */
   const [
     viewingUserId,
@@ -92,8 +92,7 @@ export function UsersPage() {
   );
 
   /*
-   * Usuário atualmente selecionado
-   * para exclusão.
+   * Usuário selecionado para exclusão.
    */
   const [
     userToDelete,
@@ -151,10 +150,8 @@ export function UsersPage() {
             await usersService.findAll(
               {
                 page,
-
                 limit:
                   DEFAULT_PAGE_SIZE,
-
                 name:
                   debouncedSearch ||
                   undefined,
@@ -190,6 +187,20 @@ export function UsersPage() {
     refreshKey,
   ]);
 
+  /*
+   * Primeira página.
+   */
+  const handleFirstPage = () => {
+    if (page <= 1) {
+      return;
+    }
+
+    setPage(1);
+  };
+
+  /*
+   * Página anterior.
+   */
   const handlePreviousPage =
     () => {
       if (page <= 1) {
@@ -202,12 +213,14 @@ export function UsersPage() {
       );
     };
 
+  /*
+   * Próxima página.
+   */
   const handleNextPage =
     () => {
       if (
         meta.totalPages === 0 ||
-        page >=
-          meta.totalPages
+        page >= meta.totalPages
       ) {
         return;
       }
@@ -217,6 +230,22 @@ export function UsersPage() {
           current + 1,
       );
     };
+
+  /*
+   * Última página.
+   */
+  const handleLastPage = () => {
+    if (
+      meta.totalPages === 0 ||
+      page >= meta.totalPages
+    ) {
+      return;
+    }
+
+    setPage(
+      meta.totalPages,
+    );
+  };
 
   /*
    * Abre o drawer de visualização.
@@ -230,7 +259,7 @@ export function UsersPage() {
   };
 
   /*
-   * Fecha o drawer de visualização.
+   * Fecha o drawer.
    */
   const handleCloseView =
     () => {
@@ -239,6 +268,9 @@ export function UsersPage() {
       );
     };
 
+  /*
+   * Abre confirmação de exclusão.
+   */
   const handleOpenDelete = (
     user: User,
   ) => {
@@ -247,6 +279,9 @@ export function UsersPage() {
     setUserToDelete(user);
   };
 
+  /*
+   * Fecha confirmação de exclusão.
+   */
   const handleCloseDelete =
     () => {
       if (deleting) {
@@ -257,6 +292,9 @@ export function UsersPage() {
       setDeleteError(null);
     };
 
+  /*
+   * Confirma exclusão.
+   */
   const handleConfirmDelete =
     async () => {
       if (!userToDelete) {
@@ -272,9 +310,9 @@ export function UsersPage() {
         );
 
         /*
-         * Se removemos o último item
-         * de uma página diferente da
-         * primeira, voltamos uma página.
+         * Se excluímos o último registro
+         * da página e não estamos na primeira,
+         * voltamos uma página.
          */
         const shouldGoBack =
           users.length === 1 &&
@@ -294,15 +332,14 @@ export function UsersPage() {
         }
 
         /*
-         * Caso contrário, recarregamos
-         * a página atual.
+         * Recarrega a página atual.
          */
         setRefreshKey(
           (current) =>
             current + 1,
         );
       } catch (
-        requestError: unknown
+      requestError: unknown
       ) {
         if (
           axios.isAxiosError<ApiErrorResponse>(
@@ -381,13 +418,9 @@ export function UsersPage() {
           <input
             type="search"
             value={search}
-            onChange={(
-              event,
-            ) =>
+            onChange={(event) =>
               setSearch(
-                event
-                  .target
-                  .value,
+                event.target.value,
               )
             }
             placeholder="Pesquisa"
@@ -452,9 +485,7 @@ export function UsersPage() {
                 {users.map(
                   (user) => (
                     <tr
-                      key={
-                        user.id
-                      }
+                      key={user.id}
                     >
                       <td>
                         {user.name}
@@ -578,56 +609,157 @@ export function UsersPage() {
       </div>
 
       {!loading &&
-        meta.totalPages > 1 && (
+        !error &&
+        meta.totalItems > 0 && (
           <div
             className={
-              styles.pagination
+              styles.paginationBar
             }
           >
-            <button
-              type="button"
+            <div
               className={
-                styles.paginationButton
+                styles.paginationSummary
               }
-              onClick={
-                handlePreviousPage
-              }
-              disabled={
-                page <= 1
-              }
-              aria-label="Página anterior"
             >
-              <ChevronLeft
-                size={16}
-              />
-            </button>
+              <span>
+                Total de itens{' '}
+              </span>
 
-            <span
-              className={
-                styles.currentPage
-              }
-            >
-              {meta.page}
-            </span>
+              <strong>
+                {meta.totalItems}
+              </strong>
+            </div>
 
-            <button
-              type="button"
+            <div
               className={
-                styles.paginationButton
+                styles.paginationControls
               }
-              onClick={
-                handleNextPage
-              }
-              disabled={
-                page >=
-                meta.totalPages
-              }
-              aria-label="Próxima página"
             >
-              <ChevronRight
-                size={16}
-              />
-            </button>
+              <div
+                className={
+                  styles.pageSize
+                }
+              >
+                <span>
+                  Itens por página
+                </span>
+
+                <strong>
+                  {meta.limit}
+                </strong>
+              </div>
+
+              <div
+                className={
+                  styles.paginationNavigation
+                }
+              >
+                <button
+                  type="button"
+                  className={
+                    styles.paginationIconButton
+                  }
+                  onClick={
+                    handleFirstPage
+                  }
+                  disabled={
+                    page <= 1
+                  }
+                  aria-label="Primeira página"
+                  title="Primeira página"
+                >
+                  <ChevronsLeft
+                    size={15}
+                  />
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    styles.paginationIconButton
+                  }
+                  onClick={
+                    handlePreviousPage
+                  }
+                  disabled={
+                    page <= 1
+                  }
+                  aria-label="Página anterior"
+                  title="Página anterior"
+                >
+                  <ChevronLeft
+                    size={15}
+                  />
+                </button>
+
+                <span
+                  className={
+                    styles.currentPage
+                  }
+                  aria-label={`Página atual ${meta.page}`}
+                >
+                  {meta.page}
+                </span>
+
+                <button
+                  type="button"
+                  className={
+                    styles.paginationIconButton
+                  }
+                  onClick={
+                    handleNextPage
+                  }
+                  disabled={
+                    meta.totalPages ===
+                    0 ||
+                    page >=
+                    meta.totalPages
+                  }
+                  aria-label="Próxima página"
+                  title="Próxima página"
+                >
+                  <ChevronRight
+                    size={15}
+                  />
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    styles.paginationIconButton
+                  }
+                  onClick={
+                    handleLastPage
+                  }
+                  disabled={
+                    meta.totalPages ===
+                    0 ||
+                    page >=
+                    meta.totalPages
+                  }
+                  aria-label="Última página"
+                  title="Última página"
+                >
+                  <ChevronsRight
+                    size={15}
+                  />
+                </button>
+              </div>
+
+              <div
+                className={
+                  styles.totalPages
+                }
+              >
+                <span>
+                  de
+                </span>
+
+                <strong>
+                  {meta.totalPages}
+                </strong>
+              </div>
+            </div>
           </div>
         )}
 
