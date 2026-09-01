@@ -24,3 +24,10 @@ export interface FindUsersParams {
   limit?: number;
   name?: string;
 }
+
+export interface CreateUserPayload {
+  name: string;
+  email: string;
+  registration: string;
+  password: string;
+}

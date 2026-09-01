@@ -1,6 +1,7 @@
 import { api } from '../api/api';
 
 import type {
+    CreateUserPayload,
     FindUsersParams,
     PaginatedUsersResponse,
     User,
@@ -27,6 +28,18 @@ export const usersService = {
         const response =
             await api.get<User>(
                 `/users/${id}`,
+            );
+
+        return response.data;
+    },
+
+    async create(
+        data: CreateUserPayload,
+    ): Promise<User> {
+        const response =
+            await api.post<User>(
+                '/users',
+                data,
             );
 
         return response.data;
