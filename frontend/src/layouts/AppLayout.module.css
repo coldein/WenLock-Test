@@ -44,7 +44,7 @@
     align-items: center;
     justify-content: flex-start;
 
-    padding: 0 15px;
+    padding: 0 12px;
 
     overflow: hidden;
 
@@ -56,7 +56,7 @@
 .logoExpanded {
     display: block;
 
-    width: 145px;
+    width: 165px;
     max-width: 100%;
     height: auto;
 
@@ -66,8 +66,8 @@
 .logoCollapsed {
     display: block;
 
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
 
     object-fit: contain;
 }
@@ -80,7 +80,7 @@
 }
 
 /* =========================================================
-   BOTÃO RECOLHER
+   BOTÃO RECOLHER SIDEBAR
    ========================================================= */
 
 .collapseButton {
@@ -111,6 +111,8 @@
         background 0.15s ease,
         color 0.15s ease,
         transform 0.15s ease;
+
+    cursor: pointer;
 
     z-index: 30;
 }
@@ -151,7 +153,6 @@
     font-weight: 600;
 
     text-decoration: none;
-
     white-space: nowrap;
 
     transition:
@@ -167,7 +168,7 @@
 }
 
 .navItem:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--color-primary-hover);
     color: #ffffff;
 }
 
@@ -185,7 +186,12 @@
     flex-direction: column;
 }
 
+/*
+ * Agora é um button, então removemos
+ * a aparência padrão do navegador.
+ */
 .menuGroupTitle {
+    width: 100%;
     height: 40px;
 
     display: flex;
@@ -194,10 +200,32 @@
 
     padding: 0 13px;
 
+    border: 0;
+    border-radius: 4px;
+
+    background: transparent;
     color: #a9b2c1;
 
     font-size: 12px;
     font-weight: 500;
+    font-family: inherit;
+    text-align: left;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+
+    cursor: pointer;
+}
+
+.menuGroupTitle:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+}
+
+.menuGroupTitle:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
 .menuGroupContent {
@@ -209,6 +237,42 @@
     min-width: 0;
 }
 
+/* =========================================================
+   SETA DO MENU EXPANSÍVEL
+   ========================================================= */
+
+.menuChevron {
+    flex-shrink: 0;
+
+    transition: transform 0.2s ease;
+}
+
+.menuChevronOpen {
+    transform: rotate(180deg);
+}
+
+/* =========================================================
+   SUBMENU
+   ========================================================= */
+
+.subMenuContainer {
+    overflow: hidden;
+
+    animation: submenuOpen 0.18s ease;
+}
+
+@keyframes submenuOpen {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .subMenuItem {
     height: 38px;
 
@@ -217,7 +281,9 @@
 
     gap: 10px;
 
-    margin-left: 27px;
+    margin-left: 24px;
+    margin-right: 0;
+
     padding: 0 13px;
 
     border-radius: 4px;
@@ -228,7 +294,6 @@
     font-weight: 400;
 
     text-decoration: none;
-
     white-space: nowrap;
 
     transition:
@@ -237,12 +302,13 @@
 }
 
 .subMenuItem:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-primary-dark);
     color: #ffffff;
 }
 
 .subMenuActive {
-    color: var(--color-primary);
+    background: var(--color-primary-hover);
+    color: #ffffff;
 }
 
 /* =========================================================
@@ -295,6 +361,8 @@
    ========================================================= */
 
 .topbar {
+    position: relative;
+
     height: 58px;
 
     display: flex;
@@ -309,8 +377,6 @@
 
     box-shadow:
         0 2px 5px rgba(0, 0, 0, 0.08);
-
-    position: relative;
 
     z-index: 10;
 }
@@ -400,16 +466,23 @@
         display: none;
     }
 
-    .menuGroupTitle span,
-    .menuGroupTitle>svg {
-        display: none;
-    }
-
     .menuGroupTitle {
         justify-content: center;
 
         padding-left: 0;
         padding-right: 0;
+    }
+
+    .menuGroupTitle span {
+        display: none;
+    }
+
+    /*
+     * Esconde a seta no menu compacto,
+     * mas mantém o ícone do grupo.
+     */
+    .menuChevron {
+        display: none;
     }
 
     .menuGroupContent {

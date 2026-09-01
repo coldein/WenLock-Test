@@ -18,11 +18,15 @@ export function AppLayout() {
   const [collapsed, setCollapsed] =
     useState(false);
 
+  const [accessOpen, setAccessOpen] =
+    useState(true);
+
   return (
     <div className={styles.layout}>
       <aside
-        className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''
-          }`}
+        className={`${styles.sidebar} ${
+          collapsed ? styles.collapsed : ''
+        }`}
       >
         <div className={styles.brand}>
           <img
@@ -64,60 +68,92 @@ export function AppLayout() {
             to="/"
             end
             className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.active : ''
+              `${styles.navItem} ${
+                isActive ? styles.active : ''
               }`
             }
           >
             <Home size={18} />
 
-            {!collapsed && <span>Home</span>}
+            {!collapsed && (
+              <span>Home</span>
+            )}
           </NavLink>
 
           <div className={styles.menuGroup}>
-            <div className={styles.menuGroupTitle}>
-              <div
-                className={styles.menuGroupContent}
+            {!collapsed && (
+              <button
+                type="button"
+                className={styles.menuGroupTitle}
+                onClick={() =>
+                  setAccessOpen(
+                    (current) => !current,
+                  )
+                }
+                aria-expanded={accessOpen}
               >
-                <KeyRound size={17} />
+                <div
+                  className={
+                    styles.menuGroupContent
+                  }
+                >
+                  <KeyRound size={17} />
 
-                {!collapsed && (
                   <span>
                     Controle de Acesso
                   </span>
-                )}
-              </div>
+                </div>
 
-              {!collapsed && (
-                <ChevronDown size={15} />
-              )}
-            </div>
+                <ChevronDown
+                  size={15}
+                  className={`${
+                    styles.menuChevron
+                  } ${
+                    accessOpen
+                      ? styles.menuChevronOpen
+                      : ''
+                  }`}
+                />
+              </button>
+            )}
 
-            {!collapsed && (
-              <NavLink
-                to="/users"
-                className={({ isActive }) =>
-                  `${styles.subMenuItem
-                  } ${isActive
-                    ? styles.subMenuActive
-                    : ''
-                  }`
+            {!collapsed && accessOpen && (
+              <div
+                className={
+                  styles.subMenuContainer
                 }
               >
-                <UserRound size={17} />
-                <span>Usuários</span>
-              </NavLink>
+                <NavLink
+                  to="/users"
+                  className={({ isActive }) =>
+                    `${
+                      styles.subMenuItem
+                    } ${
+                      isActive
+                        ? styles.subMenuActive
+                        : ''
+                    }`
+                  }
+                >
+                  <UserRound size={17} />
+
+                  <span>Usuários</span>
+                </NavLink>
+              </div>
             )}
 
             {collapsed && (
               <NavLink
                 to="/users"
                 className={({ isActive }) =>
-                  `${styles.navItem} ${isActive
-                    ? styles.active
-                    : ''
+                  `${styles.navItem} ${
+                    isActive
+                      ? styles.active
+                      : ''
                   }`
                 }
                 aria-label="Usuários"
+                title="Usuários"
               >
                 <UserRound size={18} />
               </NavLink>
@@ -126,7 +162,9 @@ export function AppLayout() {
         </nav>
 
         {!collapsed && (
-          <footer className={styles.sidebarFooter}>
+          <footer
+            className={styles.sidebarFooter}
+          >
             <strong>© WenLock</strong>
 
             <span>
@@ -139,10 +177,11 @@ export function AppLayout() {
       </aside>
 
       <div
-        className={`${styles.workspace} ${collapsed
+        className={`${styles.workspace} ${
+          collapsed
             ? styles.workspaceCollapsed
             : ''
-          }`}
+        }`}
       >
         <header className={styles.topbar}>
           <div />
@@ -152,7 +191,11 @@ export function AppLayout() {
               MS
             </div>
 
-            <span className={styles.onlineIndicator} />
+            <span
+              className={
+                styles.onlineIndicator
+              }
+            />
           </div>
         </header>
 
