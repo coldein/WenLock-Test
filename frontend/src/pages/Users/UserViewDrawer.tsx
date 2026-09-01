@@ -1,13 +1,7 @@
-import {
-    X,
-} from 'lucide-react';
-import {
-    useEffect,
-    useState,
-} from 'react';
+import { X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import { usersService } from '../../services/users.service';
-
 import type { User } from '../../types/user';
 
 import styles from './UserViewDrawer.module.css';
@@ -33,27 +27,17 @@ function formatDate(
 function getLastEdition(
     user: User,
 ): string {
-    const createdAt =
-        new Date(
-            user.createdAt,
-        ).getTime();
+    const createdAt = new Date(
+        user.createdAt,
+    ).getTime();
 
-    const updatedAt =
-        new Date(
-            user.updatedAt,
-        ).getTime();
+    const updatedAt = new Date(
+        user.updatedAt,
+    ).getTime();
 
-    /*
-     * Na criação, createdAt e updatedAt
-     * normalmente possuem o mesmo horário.
-     *
-     * Usamos 1 segundo de tolerância para
-     * evitar diferenças mínimas do banco.
-     */
     const wasEdited =
         Math.abs(
-            updatedAt -
-                createdAt,
+            updatedAt - createdAt,
         ) > 1000;
 
     if (!wasEdited) {
@@ -70,23 +54,18 @@ export function UserViewDrawer({
     onClose,
 }: UserViewDrawerProps) {
     const [user, setUser] =
-        useState<User | null>(
-            null,
-        );
+        useState<User | null>(null);
 
     const [loading, setLoading] =
         useState(false);
 
     const [error, setError] =
-        useState<string | null>(
-            null,
-        );
+        useState<string | null>(null);
 
     useEffect(() => {
         if (userId === null) {
             setUser(null);
             setError(null);
-
             return;
         }
 
@@ -101,14 +80,11 @@ export function UserViewDrawer({
                             userId,
                         );
 
-                    setUser(
-                        response,
-                    );
+                    setUser(response);
                 } catch {
                     setError(
                         'Não foi possível carregar os dados do usuário.',
                     );
-
                     setUser(null);
                 } finally {
                     setLoading(false);
@@ -126,10 +102,7 @@ export function UserViewDrawer({
         const handleKeyDown = (
             event: KeyboardEvent,
         ) => {
-            if (
-                event.key ===
-                'Escape'
-            ) {
+            if (event.key === 'Escape') {
                 onClose();
             }
         };
@@ -145,10 +118,7 @@ export function UserViewDrawer({
                 handleKeyDown,
             );
         };
-    }, [
-        userId,
-        onClose,
-    ]);
+    }, [userId, onClose]);
 
     if (userId === null) {
         return null;
@@ -156,13 +126,9 @@ export function UserViewDrawer({
 
     return (
         <div
-            className={
-                styles.backdrop
-            }
+            className={styles.backdrop}
             role="presentation"
-            onMouseDown={(
-                event,
-            ) => {
+            onMouseDown={(event) => {
                 if (
                     event.target ===
                     event.currentTarget
@@ -172,23 +138,15 @@ export function UserViewDrawer({
             }}
         >
             <aside
-                className={
-                    styles.drawer
-                }
+                className={styles.drawer}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="view-user-title"
             >
-                <header
-                    className={
-                        styles.header
-                    }
-                >
+                <header className={styles.header}>
                     <h2
                         id="view-user-title"
-                        className={
-                            styles.title
-                        }
+                        className={styles.title}
                     >
                         Visualizar Usuário
                     </h2>
@@ -198,199 +156,189 @@ export function UserViewDrawer({
                         className={
                             styles.closeButton
                         }
-                        onClick={
-                            onClose
-                        }
+                        onClick={onClose}
                         aria-label="Fechar visualização"
                     >
-                        <X
-                            size={25}
-                        />
+                        <X size={25} />
                     </button>
                 </header>
 
-                {loading && (
-                    <div
-                        className={
-                            styles.loading
-                        }
-                    >
-                        Carregando
-                        usuário...
-                    </div>
-                )}
-
-                {!loading &&
-                    error && (
+                <div className={styles.body}>
+                    {loading && (
                         <div
                             className={
-                                styles.error
+                                styles.loading
                             }
+                        >
+                            Carregando usuário...
+                        </div>
+                    )}
+
+                    {!loading && error && (
+                        <div
+                            className={styles.error}
                         >
                             {error}
                         </div>
                     )}
 
-                {!loading &&
-                    !error &&
-                    user && (
-                        <div
-                            className={
-                                styles.content
-                            }
-                        >
-                            <section
+                    {!loading &&
+                        !error &&
+                        user && (
+                            <div
                                 className={
-                                    styles.section
+                                    styles.content
                                 }
                             >
-                                <div
+                                <section
                                     className={
-                                        styles.sectionTitle
-                                    }
-                                >
-                                    <span>
-                                        Dados
-                                        do
-                                        Usuário
-                                    </span>
-
-                                    <div />
-                                </div>
-
-                                <div
-                                    className={
-                                        styles.userGrid
+                                        styles.section
                                     }
                                 >
                                     <div
                                         className={
-                                            styles.field
+                                            styles.sectionTitle
                                         }
                                     >
-                                        <span
-                                            className={
-                                                styles.label
-                                            }
-                                        >
-                                            Nome
+                                        <span>
+                                            Dados do Usuário
                                         </span>
-
-                                        <strong>
-                                            {
-                                                user.name
-                                            }
-                                        </strong>
+                                        <div />
                                     </div>
 
                                     <div
                                         className={
-                                            styles.field
+                                            styles.userGrid
                                         }
                                     >
-                                        <span
+                                        <div
                                             className={
-                                                styles.label
+                                                styles.field
                                             }
                                         >
-                                            Matrícula
-                                        </span>
+                                            <span
+                                                className={
+                                                    styles.label
+                                                }
+                                            >
+                                                Nome
+                                            </span>
+                                            <strong>
+                                                {user.name}
+                                            </strong>
+                                        </div>
 
-                                        <strong>
-                                            {
-                                                user.registration
-                                            }
-                                        </strong>
-                                    </div>
-
-                                    <div
-                                        className={`${styles.field} ${styles.emailField}`}
-                                    >
-                                        <span
+                                        <div
                                             className={
-                                                styles.label
+                                                styles.field
                                             }
                                         >
-                                            E-mail
-                                        </span>
+                                            <span
+                                                className={
+                                                    styles.label
+                                                }
+                                            >
+                                                Matrícula
+                                            </span>
+                                            <strong>
+                                                {
+                                                    user.registration
+                                                }
+                                            </strong>
+                                        </div>
 
-                                        <strong>
-                                            {
-                                                user.email
-                                            }
-                                        </strong>
+                                        <div
+                                            className={`${styles.field} ${styles.emailField}`}
+                                        >
+                                            <span
+                                                className={
+                                                    styles.label
+                                                }
+                                            >
+                                                E-mail
+                                            </span>
+                                            <strong>
+                                                {user.email}
+                                            </strong>
+                                        </div>
                                     </div>
-                                </div>
-                            </section>
+                                </section>
 
-                            <section
-                                className={
-                                    styles.section
-                                }
-                            >
-                                <div
+                                <section
                                     className={
-                                        styles.sectionTitle
-                                    }
-                                >
-                                    <span>
-                                        Detalhes
-                                    </span>
-
-                                    <div />
-                                </div>
-
-                                <div
-                                    className={
-                                        styles.detailsGrid
+                                        styles.section
                                     }
                                 >
                                     <div
                                         className={
-                                            styles.field
+                                            styles.sectionTitle
                                         }
                                     >
-                                        <span
-                                            className={
-                                                styles.label
-                                            }
-                                        >
-                                            Data
-                                            de
-                                            criação
+                                        <span>
+                                            Detalhes
                                         </span>
-
-                                        <strong>
-                                            {formatDate(
-                                                user.createdAt,
-                                            )}
-                                        </strong>
+                                        <div />
                                     </div>
 
                                     <div
                                         className={
-                                            styles.field
+                                            styles.detailsGrid
                                         }
                                     >
-                                        <span
+                                        <div
                                             className={
-                                                styles.label
+                                                styles.field
                                             }
                                         >
-                                            Última
-                                            edição
-                                        </span>
+                                            <span
+                                                className={
+                                                    styles.label
+                                                }
+                                            >
+                                                Data de criação
+                                            </span>
+                                            <strong>
+                                                {formatDate(
+                                                    user.createdAt,
+                                                )}
+                                            </strong>
+                                        </div>
 
-                                        <strong>
-                                            {getLastEdition(
-                                                user,
-                                            )}
-                                        </strong>
+                                        <div
+                                            className={
+                                                styles.field
+                                            }
+                                        >
+                                            <span
+                                                className={
+                                                    styles.label
+                                                }
+                                            >
+                                                Última edição
+                                            </span>
+                                            <strong>
+                                                {getLastEdition(
+                                                    user,
+                                                )}
+                                            </strong>
+                                        </div>
                                     </div>
-                                </div>
-                            </section>
-                        </div>
-                    )}
+                                </section>
+                            </div>
+                        )}
+                </div>
+
+                <footer className={styles.footer}>
+                    <button
+                        type="button"
+                        className={
+                            styles.footerCloseButton
+                        }
+                        onClick={onClose}
+                    >
+                        Fechar
+                    </button>
+                </footer>
             </aside>
         </div>
     );
