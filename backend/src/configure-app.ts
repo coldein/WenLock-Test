@@ -6,6 +6,10 @@ import {
 export function configureApp(
     app: INestApplication,
 ): void {
+    app.enableCors({
+        origin: 'http://localhost:5173',
+    });
+
     app.setGlobalPrefix('api');
 
     app.useGlobalPipes(
