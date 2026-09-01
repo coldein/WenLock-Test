@@ -4,6 +4,7 @@ import type {
     CreateUserPayload,
     FindUsersParams,
     PaginatedUsersResponse,
+    UpdateUserPayload,
     User,
 } from '../types/user';
 
@@ -39,6 +40,19 @@ export const usersService = {
         const response =
             await api.post<User>(
                 '/users',
+                data,
+            );
+
+        return response.data;
+    },
+
+    async update(
+        id: number,
+        data: UpdateUserPayload,
+    ): Promise<User> {
+        const response =
+            await api.patch<User>(
+                `/users/${id}`,
                 data,
             );
 

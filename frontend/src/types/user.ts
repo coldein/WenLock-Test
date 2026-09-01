@@ -31,3 +31,10 @@ export interface CreateUserPayload {
   registration: string;
   password: string;
 }
+
+export interface UpdateUserPayload {
+    name?: string;
+    email?: string;
+    registration?: string;
+    password?: string;
+}
