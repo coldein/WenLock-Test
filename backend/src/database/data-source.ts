@@ -1,20 +1,30 @@
-import 'dotenv/config';
+import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 
 import { User } from '../users/entities/user.entity';
 
+config({
+  path:
+    process.env.NODE_ENV === 'test'
+      ? '.env.test'
+      : '.env',
+});
+
 export default new DataSource({
-    type: 'mysql',
+  type: 'mysql',
 
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT ?? 3306),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT ?? 3306),
 
-    entities: [User],
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 
-    migrations: ['src/database/migrations/*{.ts,.js}'],
+  entities: [User],
 
-    synchronize: false,
+  migrations: [
+    'src/database/migrations/*{.ts,.js}',
+  ],
+
+  synchronize: false,
 });

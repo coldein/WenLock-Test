@@ -1,18 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const core_1 = require("@nestjs/core");
+const configure_app_1 = require("./configure-app");
 const swagger_1 = require("@nestjs/swagger");
 const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.setGlobalPrefix('api');
-    app.useGlobalPipes(new common_1.ValidationPipe({
-        transform: true,
-        whitelist: true,
-        forbidNonWhitelisted: true,
-    }));
+    (0, configure_app_1.configureApp)(app);
     const swaggerConfig = new swagger_1.DocumentBuilder()
         .setTitle('WenLock Users API')
         .setDescription('API REST para gerenciamento de usuários do teste prático WenLock')

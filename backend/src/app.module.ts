@@ -10,6 +10,11 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
 
+      envFilePath:
+        process.env.NODE_ENV === 'test'
+          ? '.env.test'
+          : '.env',
+
       validationSchema: Joi.object({
         PORT: Joi.number().port().default(3000),
 
@@ -27,15 +32,32 @@ import { UsersModule } from './users/users.module';
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
 
-        host: configService.getOrThrow<string>('DB_HOST'),
-        port: Number(configService.getOrThrow('DB_PORT')),
-        username: configService.getOrThrow<string>('DB_USERNAME'),
-        password: configService.getOrThrow<string>('DB_PASSWORD'),
-        database: configService.getOrThrow<string>('DB_DATABASE'),
+        host:
+          configService.getOrThrow<string>(
+            'DB_HOST',
+          ),
+
+        port: Number(
+          configService.getOrThrow('DB_PORT'),
+        ),
+
+        username:
+          configService.getOrThrow<string>(
+            'DB_USERNAME',
+          ),
+
+        password:
+          configService.getOrThrow<string>(
+            'DB_PASSWORD',
+          ),
+
+        database:
+          configService.getOrThrow<string>(
+            'DB_DATABASE',
+          ),
 
         autoLoadEntities: true,
 
-        // A estrutura do banco será controlada por migrations.
         synchronize: false,
       }),
     }),

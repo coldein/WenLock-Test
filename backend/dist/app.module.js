@@ -53,6 +53,9 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
+                envFilePath: process.env.NODE_ENV === 'test'
+                    ? '.env.test'
+                    : '.env',
                 validationSchema: Joi.object({
                     PORT: Joi.number().port().default(3000),
                     DB_HOST: Joi.string().required(),
