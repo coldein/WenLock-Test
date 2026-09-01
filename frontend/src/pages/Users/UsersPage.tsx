@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   ChevronLeft,
   ChevronRight,
@@ -23,6 +24,8 @@ import type {
   User,
 } from '../../types/user';
 
+import { UserDeleteModal } from './UserDeleteModal';
+
 import styles from './UsersPage.module.css';
 
 const DEFAULT_PAGE_SIZE = 15;
@@ -33,6 +36,10 @@ const EMPTY_META: PaginationMeta = {
   totalItems: 0,
   totalPages: 0,
 };
+
+interface ApiErrorResponse {
+  message?: string | string[];
+}
 
 export function UsersPage() {
   const navigate = useNavigate();
@@ -63,91 +70,268 @@ export function UsersPage() {
     useState<string | null>(null);
 
   /*
+   * Incrementamos este valor quando
+   * precisamos recarregar a mesma página.
+   */
+  const [
+    refreshKey,
+    setRefreshKey,
+  ] = useState(0);
+
+  /*
+   * Usuário atualmente selecionado
+   * para exclusão.
+   */
+  const [
+    userToDelete,
+    setUserToDelete,
+  ] = useState<User | null>(
+    null,
+  );
+
+  const [
+    deleting,
+    setDeleting,
+  ] = useState(false);
+
+  const [
+    deleteError,
+    setDeleteError,
+  ] = useState<string | null>(
+    null,
+  );
+
+  /*
    * Pesquisa automática com debounce.
-   * Evita uma chamada à API a cada tecla digitada.
    */
   useEffect(() => {
-    const timeout = window.setTimeout(
-      () => {
-        setPage(1);
-        setDebouncedSearch(
-          search.trim(),
-        );
-      },
-      350,
-    );
+    const timeout =
+      window.setTimeout(
+        () => {
+          setPage(1);
+
+          setDebouncedSearch(
+            search.trim(),
+          );
+        },
+        350,
+      );
 
     return () => {
-      window.clearTimeout(timeout);
+      window.clearTimeout(
+        timeout,
+      );
     };
   }, [search]);
 
   /*
-   * Busca usuários sempre que a página
-   * ou o termo pesquisado mudar.
+   * Carrega a listagem.
    */
   useEffect(() => {
-    const loadUsers = async () => {
+    const loadUsers =
+      async () => {
+        try {
+          setLoading(true);
+          setError(null);
+
+          const response =
+            await usersService.findAll(
+              {
+                page,
+
+                limit:
+                  DEFAULT_PAGE_SIZE,
+
+                name:
+                  debouncedSearch ||
+                  undefined,
+              },
+            );
+
+          setUsers(
+            response.data,
+          );
+
+          setMeta(
+            response.meta,
+          );
+        } catch {
+          setError(
+            'Não foi possível carregar os usuários.',
+          );
+
+          setUsers([]);
+
+          setMeta(
+            EMPTY_META,
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
+
+    void loadUsers();
+  }, [
+    page,
+    debouncedSearch,
+    refreshKey,
+  ]);
+
+  const handlePreviousPage =
+    () => {
+      if (page <= 1) {
+        return;
+      }
+
+      setPage(
+        (current) =>
+          current - 1,
+      );
+    };
+
+  const handleNextPage =
+    () => {
+      if (
+        meta.totalPages === 0 ||
+        page >=
+        meta.totalPages
+      ) {
+        return;
+      }
+
+      setPage(
+        (current) =>
+          current + 1,
+      );
+    };
+
+  const handleOpenDelete = (
+    user: User,
+  ) => {
+    setDeleteError(null);
+
+    setUserToDelete(user);
+  };
+
+  const handleCloseDelete =
+    () => {
+      if (deleting) {
+        return;
+      }
+
+      setUserToDelete(null);
+      setDeleteError(null);
+    };
+
+  const handleConfirmDelete =
+    async () => {
+      if (!userToDelete) {
+        return;
+      }
+
       try {
-        setLoading(true);
-        setError(null);
+        setDeleting(true);
+        setDeleteError(null);
 
-        const response =
-          await usersService.findAll({
-            page,
-            limit: DEFAULT_PAGE_SIZE,
-            name:
-              debouncedSearch ||
-              undefined,
-          });
-
-        setUsers(response.data);
-        setMeta(response.meta);
-      } catch {
-        setError(
-          'Não foi possível carregar os usuários.',
+        await usersService.remove(
+          userToDelete.id,
         );
 
-        setUsers([]);
-        setMeta(EMPTY_META);
+        /*
+         * Se removemos o último item
+         * de uma página diferente da
+         * primeira, voltamos uma página.
+         */
+        const shouldGoBack =
+          users.length === 1 &&
+          page > 1;
+
+        setUserToDelete(
+          null,
+        );
+
+        if (shouldGoBack) {
+          setPage(
+            (current) =>
+              current - 1,
+          );
+
+          return;
+        }
+
+        /*
+         * Caso contrário, recarregamos
+         * a página atual.
+         */
+        setRefreshKey(
+          (current) =>
+            current + 1,
+        );
+      } catch (
+      requestError: unknown
+      ) {
+        if (
+          axios.isAxiosError<ApiErrorResponse>(
+            requestError,
+          )
+        ) {
+          const apiMessage =
+            requestError
+              .response
+              ?.data
+              ?.message;
+
+          if (
+            typeof apiMessage ===
+            'string'
+          ) {
+            setDeleteError(
+              apiMessage,
+            );
+
+            return;
+          }
+
+          if (
+            Array.isArray(
+              apiMessage,
+            )
+          ) {
+            setDeleteError(
+              apiMessage.join(
+                '. ',
+              ),
+            );
+
+            return;
+          }
+        }
+
+        setDeleteError(
+          'Não foi possível excluir o usuário.',
+        );
       } finally {
-        setLoading(false);
+        setDeleting(false);
       }
     };
 
-    void loadUsers();
-  }, [page, debouncedSearch]);
-
-  const handlePreviousPage = () => {
-    if (page <= 1) {
-      return;
-    }
-
-    setPage(
-      (current) => current - 1,
-    );
-  };
-
-  const handleNextPage = () => {
-    if (
-      meta.totalPages === 0 ||
-      page >= meta.totalPages
-    ) {
-      return;
-    }
-
-    setPage(
-      (current) => current + 1,
-    );
-  };
-
   return (
-    <section className={styles.page}>
-      <h1 className={styles.pageTitle}>
+    <section
+      className={styles.page}
+    >
+      <h1
+        className={
+          styles.pageTitle
+        }
+      >
         Usuários
       </h1>
 
-      <div className={styles.toolbar}>
+      <div
+        className={
+          styles.toolbar
+        }
+      >
         <div
           className={
             styles.searchWrapper
@@ -163,9 +347,13 @@ export function UsersPage() {
           <input
             type="search"
             value={search}
-            onChange={(event) =>
+            onChange={(
+              event,
+            ) =>
               setSearch(
-                event.target.value,
+                event
+                  .target
+                  .value,
               )
             }
             placeholder="Pesquisa"
@@ -204,11 +392,15 @@ export function UsersPage() {
         }
       >
         <table
-          className={styles.table}
+          className={
+            styles.table
+          }
         >
           <thead>
             <tr>
-              <th>Nome</th>
+              <th>
+                Nome
+              </th>
 
               <th
                 className={
@@ -221,13 +413,22 @@ export function UsersPage() {
           </thead>
 
           {!loading &&
-            users.length > 0 && (
+            users.length >
+            0 && (
               <tbody>
                 {users.map(
-                  (user) => (
-                    <tr key={user.id}>
+                  (
+                    user,
+                  ) => (
+                    <tr
+                      key={
+                        user.id
+                      }
+                    >
                       <td>
-                        {user.name}
+                        {
+                          user.name
+                        }
                       </td>
 
                       <td
@@ -244,7 +445,9 @@ export function UsersPage() {
                           aria-label={`Visualizar ${user.name}`}
                         >
                           <Eye
-                            size={17}
+                            size={
+                              17
+                            }
                           />
                         </button>
 
@@ -262,7 +465,9 @@ export function UsersPage() {
                           }
                         >
                           <Pencil
-                            size={17}
+                            size={
+                              17
+                            }
                           />
                         </button>
 
@@ -273,9 +478,16 @@ export function UsersPage() {
                           }
                           title="Excluir"
                           aria-label={`Excluir ${user.name}`}
+                          onClick={() =>
+                            handleOpenDelete(
+                              user,
+                            )
+                          }
                         >
                           <Trash2
-                            size={17}
+                            size={
+                              17
+                            }
                           />
                         </button>
                       </td>
@@ -292,13 +504,15 @@ export function UsersPage() {
               styles.loadingState
             }
           >
-            Carregando usuários...
+            Carregando
+            usuários...
           </div>
         )}
 
         {!loading &&
           !error &&
-          users.length === 0 && (
+          users.length ===
+          0 && (
             <div
               className={
                 styles.emptyState
@@ -318,7 +532,8 @@ export function UsersPage() {
                   styles.emptyTitle
                 }
               >
-                Nenhum Resultado
+                Nenhum
+                Resultado
                 Encontrado
               </h2>
 
@@ -327,19 +542,27 @@ export function UsersPage() {
                   styles.emptyDescription
                 }
               >
-                Não foi possível achar
-                nenhum resultado para sua
+                Não foi
+                possível
+                achar nenhum
+                resultado
+                para sua
                 busca.
                 <br />
-                Tente refazer a pesquisa
-                para encontrar o que busca.
+                Tente
+                refazer a
+                pesquisa
+                para
+                encontrar o
+                que busca.
               </p>
             </div>
           )}
       </div>
 
       {!loading &&
-        meta.totalPages > 1 && (
+        meta.totalPages >
+        1 && (
           <div
             className={
               styles.pagination
@@ -353,11 +576,15 @@ export function UsersPage() {
               onClick={
                 handlePreviousPage
               }
-              disabled={page <= 1}
+              disabled={
+                page <= 1
+              }
               aria-label="Página anterior"
             >
               <ChevronLeft
-                size={16}
+                size={
+                  16
+                }
               />
             </button>
 
@@ -384,11 +611,25 @@ export function UsersPage() {
               aria-label="Próxima página"
             >
               <ChevronRight
-                size={16}
+                size={
+                  16
+                }
               />
             </button>
           </div>
         )}
+
+      <UserDeleteModal
+        user={userToDelete}
+        deleting={deleting}
+        error={deleteError}
+        onCancel={
+          handleCloseDelete
+        }
+        onConfirm={() => {
+          void handleConfirmDelete();
+        }}
+      />
     </section>
   );
 }
