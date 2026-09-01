@@ -7,6 +7,9 @@ import {
     Post,
     Patch,
     Query,
+    Delete,
+    HttpCode,
+    HttpStatus,
 } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -42,6 +45,14 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number,
     ): Promise<UserResponseDto> {
         return this.usersService.findOne(id);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    remove(
+        @Param('id', ParseIntPipe) id: number,
+    ): Promise<void> {
+        return this.usersService.remove(id);
     }
 
     @Patch(':id')

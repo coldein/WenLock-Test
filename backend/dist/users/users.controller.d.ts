@@ -10,5 +10,6 @@ export declare class UsersController {
     create(createUserDto: CreateUserDto): Promise<UserResponseDto>;
     findAll(query: FindUsersQueryDto): Promise<PaginatedUsersResponseDto>;
     findOne(id: number): Promise<UserResponseDto>;
+    remove(id: number): Promise<void>;
     update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto>;
 }

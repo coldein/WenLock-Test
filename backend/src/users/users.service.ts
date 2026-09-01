@@ -121,6 +121,16 @@ export class UsersService {
     return UserResponseDto.fromEntity(user);
   }
 
+  async remove(id: number): Promise<void> {
+    const result = await this.usersRepository.delete(id);
+
+    if (!result.affected) {
+      throw new NotFoundException(
+        'Usuário não encontrado',
+      );
+    }
+  }
+
   private isDuplicateEntryError(error: unknown): boolean {
     if (!(error instanceof QueryFailedError)) {
       return false;

@@ -92,6 +92,12 @@ let UsersService = class UsersService {
         }
         return user_response_dto_1.UserResponseDto.fromEntity(user);
     }
+    async remove(id) {
+        const result = await this.usersRepository.delete(id);
+        if (!result.affected) {
+            throw new common_1.NotFoundException('Usuário não encontrado');
+        }
+    }
     isDuplicateEntryError(error) {
         if (!(error instanceof typeorm_2.QueryFailedError)) {
             return false;
