@@ -1,7 +1,3 @@
-import {
-    Trash2,
-    X,
-} from 'lucide-react';
 import { useEffect } from 'react';
 
 import type { User } from '../../types/user';
@@ -62,14 +58,12 @@ export function UserDeleteModal({
 
     return (
         <div
-            className={
-                styles.backdrop
-            }
+            className={styles.backdrop}
             role="presentation"
             onMouseDown={(event) => {
                 if (
                     event.target ===
-                        event.currentTarget &&
+                    event.currentTarget &&
                     !deleting
                 ) {
                     onCancel();
@@ -81,73 +75,32 @@ export function UserDeleteModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="delete-user-title"
+                aria-describedby="delete-user-description"
             >
-                <button
-                    type="button"
-                    className={
-                        styles.closeButton
-                    }
-                    onClick={onCancel}
-                    disabled={deleting}
-                    aria-label="Fechar"
-                >
-                    <X size={18} />
-                </button>
-
-                <div
-                    className={
-                        styles.iconContainer
-                    }
-                >
-                    <Trash2 size={24} />
-                </div>
-
                 <h2
                     id="delete-user-title"
-                    className={
-                        styles.title
-                    }
+                    className={styles.title}
                 >
-                    Excluir Usuário
+                    Deseja excluir?
                 </h2>
 
                 <p
-                    className={
-                        styles.description
-                    }
+                    id="delete-user-description"
+                    className={styles.description}
                 >
-                    Tem certeza que deseja
-                    excluir o usuário
-                    <strong>
-                        {' '}
-                        {user.name}
-                    </strong>
-                    ?
-                </p>
-
-                <p
-                    className={
-                        styles.warning
-                    }
-                >
-                    Esta ação não poderá ser
-                    desfeita.
+                    O usuário será excluído.
                 </p>
 
                 {error && (
                     <div
-                        className={
-                            styles.error
-                        }
+                        className={styles.error}
                     >
                         {error}
                     </div>
                 )}
 
                 <div
-                    className={
-                        styles.actions
-                    }
+                    className={styles.actions}
                 >
                     <button
                         type="button"
@@ -157,24 +110,20 @@ export function UserDeleteModal({
                         onClick={onCancel}
                         disabled={deleting}
                     >
-                        Cancelar
+                        Não
                     </button>
 
                     <button
                         type="button"
                         className={
-                            styles.deleteButton
+                            styles.confirmButton
                         }
                         onClick={onConfirm}
                         disabled={deleting}
                     >
-                        <Trash2
-                            size={16}
-                        />
-
                         {deleting
                             ? 'Excluindo...'
-                            : 'Excluir'}
+                            : 'Sim'}
                     </button>
                 </div>
             </div>
