@@ -3,8 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -44,8 +42,5 @@ import { UsersModule } from './users/users.module';
 
     UsersModule,
   ],
-
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule { }
