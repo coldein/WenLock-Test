@@ -25,6 +25,7 @@ import type {
 } from '../../types/user';
 
 import { UserDeleteModal } from './UserDeleteModal';
+import { UserViewDrawer } from './UserViewDrawer';
 
 import styles from './UsersPage.module.css';
 
@@ -77,6 +78,18 @@ export function UsersPage() {
     refreshKey,
     setRefreshKey,
   ] = useState(0);
+
+  /*
+   * Usuário selecionado para visualização.
+   * Guardamos somente o ID porque o drawer
+   * consulta os dados atualizados na API.
+   */
+  const [
+    viewingUserId,
+    setViewingUserId,
+  ] = useState<number | null>(
+    null,
+  );
 
   /*
    * Usuário atualmente selecionado
@@ -194,7 +207,7 @@ export function UsersPage() {
       if (
         meta.totalPages === 0 ||
         page >=
-        meta.totalPages
+          meta.totalPages
       ) {
         return;
       }
@@ -202,6 +215,27 @@ export function UsersPage() {
       setPage(
         (current) =>
           current + 1,
+      );
+    };
+
+  /*
+   * Abre o drawer de visualização.
+   */
+  const handleOpenView = (
+    userId: number,
+  ) => {
+    setViewingUserId(
+      userId,
+    );
+  };
+
+  /*
+   * Fecha o drawer de visualização.
+   */
+  const handleCloseView =
+    () => {
+      setViewingUserId(
+        null,
       );
     };
 
@@ -268,7 +302,7 @@ export function UsersPage() {
             current + 1,
         );
       } catch (
-      requestError: unknown
+        requestError: unknown
       ) {
         if (
           axios.isAxiosError<ApiErrorResponse>(
@@ -413,22 +447,17 @@ export function UsersPage() {
           </thead>
 
           {!loading &&
-            users.length >
-            0 && (
+            users.length > 0 && (
               <tbody>
                 {users.map(
-                  (
-                    user,
-                  ) => (
+                  (user) => (
                     <tr
                       key={
                         user.id
                       }
                     >
                       <td>
-                        {
-                          user.name
-                        }
+                        {user.name}
                       </td>
 
                       <td
@@ -443,11 +472,14 @@ export function UsersPage() {
                           }
                           title="Visualizar"
                           aria-label={`Visualizar ${user.name}`}
+                          onClick={() =>
+                            handleOpenView(
+                              user.id,
+                            )
+                          }
                         >
                           <Eye
-                            size={
-                              17
-                            }
+                            size={17}
                           />
                         </button>
 
@@ -465,9 +497,7 @@ export function UsersPage() {
                           }
                         >
                           <Pencil
-                            size={
-                              17
-                            }
+                            size={17}
                           />
                         </button>
 
@@ -485,9 +515,7 @@ export function UsersPage() {
                           }
                         >
                           <Trash2
-                            size={
-                              17
-                            }
+                            size={17}
                           />
                         </button>
                       </td>
@@ -504,15 +532,13 @@ export function UsersPage() {
               styles.loadingState
             }
           >
-            Carregando
-            usuários...
+            Carregando usuários...
           </div>
         )}
 
         {!loading &&
           !error &&
-          users.length ===
-          0 && (
+          users.length === 0 && (
             <div
               className={
                 styles.emptyState
@@ -532,9 +558,7 @@ export function UsersPage() {
                   styles.emptyTitle
                 }
               >
-                Nenhum
-                Resultado
-                Encontrado
+                Nenhum Resultado Encontrado
               </h2>
 
               <p
@@ -542,27 +566,19 @@ export function UsersPage() {
                   styles.emptyDescription
                 }
               >
-                Não foi
-                possível
-                achar nenhum
-                resultado
-                para sua
+                Não foi possível achar
+                nenhum resultado para sua
                 busca.
                 <br />
-                Tente
-                refazer a
-                pesquisa
-                para
-                encontrar o
-                que busca.
+                Tente refazer a pesquisa
+                para encontrar o que busca.
               </p>
             </div>
           )}
       </div>
 
       {!loading &&
-        meta.totalPages >
-        1 && (
+        meta.totalPages > 1 && (
           <div
             className={
               styles.pagination
@@ -582,9 +598,7 @@ export function UsersPage() {
               aria-label="Página anterior"
             >
               <ChevronLeft
-                size={
-                  16
-                }
+                size={16}
               />
             </button>
 
@@ -611,13 +625,18 @@ export function UsersPage() {
               aria-label="Próxima página"
             >
               <ChevronRight
-                size={
-                  16
-                }
+                size={16}
               />
             </button>
           </div>
         )}
+
+      <UserViewDrawer
+        userId={viewingUserId}
+        onClose={
+          handleCloseView
+        }
+      />
 
       <UserDeleteModal
         user={userToDelete}
