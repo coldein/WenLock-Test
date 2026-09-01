@@ -30,6 +30,7 @@ describe('UsersService', () => {
         findOne: jest.fn(),
         create: jest.fn(),
         save: jest.fn(),
+        delete: jest.fn(),
         createQueryBuilder: jest.fn(),
     };
 
@@ -684,5 +685,51 @@ describe('UsersService', () => {
 
         expect(result).not.toHaveProperty('password');
         expect(result).not.toHaveProperty('passwordHash');
+    });
+
+    // =========================================================
+    // EXCLUSÃO DE USUÁRIOS
+    // =========================================================
+
+    it('deve excluir um usuário existente', async () => {
+        usersRepositoryMock.delete.mockResolvedValue({
+            affected: 1,
+            raw: [],
+        });
+
+        await expect(
+            service.remove(1),
+        ).resolves.toBeUndefined();
+
+        expect(
+            usersRepositoryMock.delete,
+        ).toHaveBeenCalledWith(1);
+
+        expect(
+            usersRepositoryMock.delete,
+        ).toHaveBeenCalledTimes(1);
+    });
+
+    it('deve lançar NotFoundException ao excluir usuário inexistente', async () => {
+        usersRepositoryMock.delete.mockResolvedValue({
+            affected: 0,
+            raw: [],
+        });
+
+        await expect(
+            service.remove(999),
+        ).rejects.toThrow(
+            new NotFoundException(
+                'Usuário não encontrado',
+            ),
+        );
+
+        expect(
+            usersRepositoryMock.delete,
+        ).toHaveBeenCalledWith(999);
+
+        expect(
+            usersRepositoryMock.delete,
+        ).toHaveBeenCalledTimes(1);
     });
 });
