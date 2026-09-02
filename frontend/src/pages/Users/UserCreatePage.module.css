@@ -2,83 +2,134 @@
     width: 100%;
 }
 
-.pageHeader {
+/* =========================================================
+   BREADCRUMB
+   ========================================================= */
+
+.breadcrumb {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: center;
 
-    gap: 20px;
+    gap: 8px;
 
-    margin-bottom: 14px;
+    margin:
+        0
+        0
+        5px
+        2px;
+
+    color: #536766;
+
+    font-size: 8px;
+    font-weight: 400;
+    line-height: 12px;
+}
+
+.breadcrumb a {
+    color: #536766;
+
+    text-decoration: none;
+
+    transition:
+        color
+        0.15s ease;
+}
+
+.breadcrumb a:hover {
+    color:
+        var(--color-primary-dark);
+}
+
+.breadcrumbSeparator {
+    color: #82908f;
+}
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.titleRow {
+    display: flex;
+    align-items: center;
+
+    gap: 2px;
+
+    margin-bottom: 7px;
+}
+
+.titleBack {
+    width: 27px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color:
+        var(--color-text);
+
+    text-decoration: none;
+
+    transition:
+        color
+        0.15s ease;
+}
+
+.titleBack:hover {
+    color:
+        var(--color-primary-dark);
+}
+
+.titleBack:focus-visible {
+    border-radius: 3px;
+
+    outline:
+        2px solid
+        var(--color-primary);
+
+    outline-offset: 1px;
 }
 
 .pageTitle {
     margin: 0;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     font-size: 26px;
     font-weight: 700;
     line-height: 36px;
 }
 
-.pageDescription {
-    margin: 2px 0 0;
-
-    color: var(--color-muted);
-
-    font-size: 11px;
-    line-height: 16px;
-}
-
 /* =========================================================
-   VOLTAR
+   CARD DO FORMULÁRIO
    ========================================================= */
 
-.backButton {
-    height: 36px;
+.formCard {
+    width: 100%;
+    min-height: 337px;
 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
 
-    gap: 6px;
+    padding:
+        13px
+        14px
+        16px;
 
-    padding: 0 14px;
+    border:
+        1px solid
+        #dfe3e5;
 
-    border: 1px solid #d5dadd;
     border-radius: 4px;
 
     background: #ffffff;
 
-    color: var(--color-text);
-
-    font-size: 11px;
-    font-weight: 600;
-
-    text-decoration: none;
-
-    transition:
-        border-color 0.15s ease,
-        color 0.15s ease,
-        background 0.15s ease;
-}
-
-.backButton:hover {
-    border-color: var(--color-primary);
-
-    background:
-        rgba(0, 170, 193, 0.04);
-
-    color: var(--color-primary-dark);
-}
-
-/* =========================================================
-   FORM
-   ========================================================= */
-
-.form {
-    width: 100%;
+    box-shadow:
+        0 1px 3px
+        rgba(0, 0, 0, 0.12);
 }
 
 /* =========================================================
@@ -88,140 +139,418 @@
 .submitError {
     margin-bottom: 12px;
 
-    padding: 11px 13px;
+    padding:
+        9px
+        11px;
 
-    border-radius: 4px;
+    border-radius: 3px;
 
     background:
-        rgba(176, 0, 32, 0.08);
+        rgba(
+            176,
+            0,
+            32,
+            0.08
+        );
 
-    color: var(--color-danger);
+    color:
+        var(--color-danger);
 
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
+    line-height: 15px;
 }
 
 /* =========================================================
-   SEÇÕES
+   TÍTULO DAS SEÇÕES
    ========================================================= */
 
-.formSection {
-    margin-bottom: 14px;
+.sectionTitle {
+    display: grid;
 
-    border: 1px solid #dfe3e5;
-    border-radius: 3px;
+    grid-template-columns:
+        auto
+        1fr;
 
-    background: var(--color-surface);
+    align-items: center;
 
-    box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.06);
+    gap: 9px;
+
+    margin-bottom: 15px;
 }
 
-.sectionHeader {
-    min-height: 40px;
+.sectionTitle span {
+    color:
+        var(--color-text);
+
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 14px;
+
+    white-space: nowrap;
+}
+
+.sectionLine {
+    height: 1px;
+
+    background: #aeb7b9;
+}
+
+.accessTitle {
+    margin-top: 15px;
+}
+
+/* =========================================================
+   GRIDS
+   ========================================================= */
+
+.userGrid,
+.accessGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    column-gap: 19px;
+}
+
+.userGrid {
+    row-gap: 9px;
+}
+
+.accessGrid {
+    row-gap: 8px;
+}
+
+/* =========================================================
+   CAMPO
+   ========================================================= */
+
+.field {
+    min-width: 0;
+}
+
+/*
+ * Estado padrão.
+ *
+ * Quando o campo está vazio, somente o
+ * placeholder aparece centralizado.
+ */
+.fieldControl {
+    position: relative;
+
+    width: 100%;
+    height: 40px;
 
     display: flex;
     align-items: center;
 
-    padding: 0 16px;
+    padding:
+        0
+        11px;
 
+    border: 0;
+
+    /*
+     * Deixamos a borda transparente para
+     * impedir mudança de altura ao focar.
+     */
     border-bottom:
-        1px solid #e8ebed;
-}
+        2px solid
+        transparent;
 
-.sectionHeader h2 {
-    margin: 0;
+    background: #f3f3f3;
 
-    color: var(--color-text);
-
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 19px;
-}
-
-.formGrid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 20px 24px;
-
-    padding: 20px 18px 24px;
+    transition:
+        background
+            0.15s ease,
+        border-color
+            0.15s ease;
 }
 
 /* =========================================================
-   CAMPOS
+   LABEL FLUTUANTE
    ========================================================= */
 
-.field {
-    display: flex;
-    flex-direction: column;
+.fieldControl label {
+    position: absolute;
 
-    gap: 6px;
-}
+    top: 4px;
+    left: 11px;
 
-.field label {
-    color: var(--color-text);
+    z-index: 1;
 
-    font-size: 11px;
-    font-weight: 600;
-}
+    margin: 0;
 
-.field input {
-    width: 100%;
-    height: 38px;
+    color:
+        var(--color-primary-dark);
 
-    padding: 0 11px;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 11px;
 
-    border: 1px solid #d5dadd;
-    border-radius: 4px;
+    opacity: 0;
 
-    outline: none;
-
-    background: #ffffff;
-    color: var(--color-text);
-
-    font-size: 11px;
+    pointer-events: none;
 
     transition:
-        border-color 0.15s ease,
-        box-shadow 0.15s ease;
+        opacity
+        0.12s ease;
 }
 
-.field input::placeholder {
-    color: #9ba5aa;
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.fieldControl input {
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+
+    padding: 0;
+
+    border: 0;
+    outline: 0;
+
+    background:
+        transparent;
+
+    color: #3e5552;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+
+    transition:
+        padding
+        0.12s ease;
 }
 
-.field input:hover {
-    border-color: var(--color-primary);
+.fieldControl input::placeholder {
+    color: #607371;
+
+    opacity: 1;
 }
 
-.field input:focus {
-    border-color: var(--color-primary);
+/* =========================================================
+   HOVER
+   ========================================================= */
 
-    box-shadow:
-        0 0 0 1px var(--color-primary);
+.fieldControl:hover {
+    background: #eeeeee;
 }
 
-.field input.inputError {
-    border-color: var(--color-danger);
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+/*
+ * Quando o usuário entra no campo:
+ *
+ * 1. mostramos a label pequena;
+ * 2. escondemos o placeholder;
+ * 3. descemos o conteúdo;
+ * 4. mostramos a linha cyan.
+ */
+.fieldControl:focus-within {
+    border-bottom-color:
+        var(--color-primary);
+
+    background: #eeeeee;
 }
 
-.field input.inputError:focus {
-    box-shadow:
-        0 0 0 1px var(--color-danger);
+.fieldControl:focus-within label {
+    opacity: 1;
+}
+
+.fieldControl:focus-within input {
+    padding-top: 10px;
+}
+
+.fieldControl:focus-within input::placeholder {
+    color: transparent;
+}
+
+/* =========================================================
+   CAMPO PREENCHIDO
+   ========================================================= */
+
+/*
+ * Mantém o floating label mesmo depois
+ * que o usuário tira o foco.
+ */
+.fieldControl:has(
+    input:not(:placeholder-shown)
+) {
+    border-bottom-color:
+        var(--color-primary);
+}
+
+.fieldControl:has(
+    input:not(:placeholder-shown)
+) label {
+    opacity: 1;
+}
+
+.fieldControl:has(
+    input:not(:placeholder-shown)
+) input {
+    padding-top: 10px;
+}
+
+.fieldControl:has(
+    input:not(:placeholder-shown)
+) input::placeholder {
+    color: transparent;
+}
+
+/* =========================================================
+   CAMPO COM ERRO
+   ========================================================= */
+
+.fieldControlError {
+    border-bottom-color:
+        var(--color-danger);
+}
+
+.fieldControlError:focus-within {
+    border-bottom-color:
+        var(--color-danger);
+}
+
+/* =========================================================
+   TEXTO ABAIXO DO CAMPO
+   ========================================================= */
+
+.fieldMeta {
+    min-height: 13px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding:
+        2px
+        1px
+        0;
+}
+
+.fieldHint {
+    margin-left: auto;
+
+    color: #405653;
+
+    font-size: 7px;
+    font-weight: 400;
+    line-height: 10px;
+
+    text-align: right;
+
+    white-space: nowrap;
 }
 
 .fieldError {
-    color: var(--color-danger);
+    color:
+        var(--color-danger);
 
-    font-size: 10px;
-    line-height: 14px;
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 10px;
+}
+
+.fieldErrorStandalone {
+    display: block;
+
+    margin-top: 2px;
+
+    color:
+        var(--color-danger);
+
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 10px;
 }
 
 /* =========================================================
-   AÇÕES
+   SENHA
+   ========================================================= */
+
+.passwordControl {
+    padding-right: 42px;
+}
+
+.passwordControl input {
+    padding-right: 5px;
+}
+
+.passwordToggle {
+    position: absolute;
+
+    top: 50%;
+    right: 8px;
+
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 3px;
+
+    background:
+        transparent;
+
+    color: #687b91;
+
+    transform:
+        translateY(-50%);
+
+    cursor: pointer;
+
+    transition:
+        color
+            0.15s ease,
+        background
+            0.15s ease;
+}
+
+.passwordToggle:hover {
+    background:
+        rgba(
+            0,
+            170,
+            193,
+            0.06
+        );
+
+    color:
+        var(--color-primary-dark);
+}
+
+.passwordToggle:focus-visible {
+    outline:
+        2px solid
+        var(--color-primary);
+
+    outline-offset: 1px;
+}
+
+/* =========================================================
+   BOTÕES
    ========================================================= */
 
 .formActions {
@@ -229,72 +558,128 @@
     align-items: center;
     justify-content: flex-end;
 
-    gap: 9px;
+    gap: 8px;
 
-    padding-top: 2px;
+    /*
+     * Mantém os botões no rodapé do card,
+     * igual ao protótipo.
+     */
+    margin-top: auto;
+
+    padding-top: 29px;
 }
 
 .cancelButton,
-.saveButton {
-    min-width: 100px;
-    height: 36px;
+.submitButton {
+    width: 121px;
+    height: 40px;
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    gap: 6px;
+    padding: 0;
 
-    padding: 0 15px;
+    border-radius: 5px;
 
-    border-radius: 4px;
-
-    font-size: 11px;
+    font-family: inherit;
+    font-size: 12px;
     font-weight: 600;
 
     text-decoration: none;
+
+    transition:
+        background
+            0.15s ease,
+        border-color
+            0.15s ease,
+        color
+            0.15s ease;
 }
 
+/* =========================================================
+   CANCELAR
+   ========================================================= */
+
 .cancelButton {
-    border: 1px solid #d5dadd;
+    border:
+        1px solid
+        #506966;
 
     background: #ffffff;
 
-    color: var(--color-text);
-
-    transition:
-        border-color 0.15s ease,
-        color 0.15s ease;
+    color:
+        var(--color-text);
 }
 
 .cancelButton:hover {
-    border-color: var(--color-primary);
+    border-color:
+        var(--color-primary-dark);
 
-    color: var(--color-primary-dark);
+    background:
+        rgba(
+            0,
+            170,
+            193,
+            0.04
+        );
+
+    color:
+        var(--color-primary-dark);
 }
 
-.saveButton {
-    border: 0;
+.cancelButton:focus-visible {
+    outline:
+        2px solid
+        var(--color-primary);
 
-    background: var(--color-primary);
-
-    color: var(--color-sidebar);
-
-    transition:
-        background 0.15s ease,
-        color 0.15s ease;
+    outline-offset: 2px;
 }
 
-.saveButton:hover:not(:disabled) {
-    background: var(--color-primary-dark);
+/* =========================================================
+   CADASTRAR
+   ========================================================= */
+
+.submitButton {
+    border:
+        1px solid
+        var(--color-primary-dark);
+
+    background:
+        var(--color-primary-dark);
 
     color: #ffffff;
+
+    cursor: pointer;
 }
 
-.saveButton:disabled {
-    background: #d2d8da;
+.submitButton:hover:not(:disabled) {
+    border-color:
+        var(--color-primary-hover);
 
-    color: #8b969b;
+    background:
+        var(--color-primary-hover);
+}
+
+.submitButton:focus-visible {
+    outline:
+        2px solid
+        var(--color-primary);
+
+    outline-offset: 2px;
+}
+
+/*
+ * Igual ao Adobe:
+ * enquanto o formulário for inválido,
+ * o botão fica cinza.
+ */
+.submitButton:disabled {
+    border-color: #d8dada;
+
+    background: #d8dada;
+
+    color: #768787;
 
     cursor: not-allowed;
 }
@@ -304,27 +689,41 @@
    ========================================================= */
 
 @media (max-width: 760px) {
-    .pageHeader {
-        flex-direction: column;
+    .userGrid,
+    .accessGrid {
+        grid-template-columns:
+            1fr;
     }
 
-    .backButton {
-        align-self: flex-start;
-    }
-
-    .formGrid {
-        grid-template-columns: 1fr;
+    .fieldHint {
+        white-space: normal;
     }
 }
 
 @media (max-width: 480px) {
+    .pageTitle {
+        font-size: 22px;
+        line-height: 30px;
+    }
+
+    .formCard {
+        min-height: 0;
+
+        padding:
+            12px
+            10px
+            14px;
+    }
+
     .formActions {
         align-items: stretch;
         flex-direction: column-reverse;
+
+        padding-top: 25px;
     }
 
     .cancelButton,
-    .saveButton {
+    .submitButton {
         width: 100%;
     }
 }

@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import {
-    ArrowLeft,
-    Save,
+    ChevronLeft,
+    Eye,
+    EyeOff,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -15,6 +16,7 @@ import {
     createUserSchema,
     type CreateUserFormData,
 } from '../../schemas/user.schema';
+
 import { usersService } from '../../services/users.service';
 
 import styles from './UserCreatePage.module.css';
@@ -25,6 +27,16 @@ interface ApiErrorResponse {
 
 export function UserCreatePage() {
     const navigate = useNavigate();
+
+    const [
+        showPassword,
+        setShowPassword,
+    ] = useState(false);
+
+    const [
+        showConfirmPassword,
+        setShowConfirmPassword,
+    ] = useState(false);
 
     const [
         submitError,
@@ -98,9 +110,7 @@ export function UserCreatePage() {
                     )
                 ) {
                     setSubmitError(
-                        apiMessage.join(
-                            '. ',
-                        ),
+                        apiMessage.join('. '),
                     );
 
                     return;
@@ -117,46 +127,73 @@ export function UserCreatePage() {
         <section
             className={styles.page}
         >
+            {/* ===================================================
+          BREADCRUMB
+          =================================================== */}
+
+            <nav
+                className={
+                    styles.breadcrumb
+                }
+                aria-label="Navegação estrutural"
+            >
+                <Link to="/users">
+                    Usuários
+                </Link>
+
+                <span
+                    className={
+                        styles.breadcrumbSeparator
+                    }
+                >
+                    &gt;
+                </span>
+
+                <span>
+                    Cadastro de Usuário
+                </span>
+            </nav>
+
+            {/* ===================================================
+          TÍTULO
+          =================================================== */}
+
             <div
                 className={
-                    styles.pageHeader
+                    styles.titleRow
                 }
             >
-                <div>
-                    <h1
-                        className={
-                            styles.pageTitle
-                        }
-                    >
-                        Cadastrar Usuário
-                    </h1>
-
-                    <p
-                        className={
-                            styles.pageDescription
-                        }
-                    >
-                        Preencha os dados para
-                        realizar o cadastro.
-                    </p>
-                </div>
-
                 <Link
                     to="/users"
                     className={
-                        styles.backButton
+                        styles.titleBack
+                    }
+                    title="Voltar"
+                    aria-label="Voltar para usuários"
+                >
+                    <ChevronLeft
+                        size={27}
+                        strokeWidth={2}
+                    />
+                </Link>
+
+                <h1
+                    className={
+                        styles.pageTitle
                     }
                 >
-                    <ArrowLeft
-                        size={17}
-                    />
-
-                    Voltar
-                </Link>
+                    Cadastro de Usuário
+                </h1>
             </div>
 
+            {/* ===================================================
+          FORMULÁRIO
+          =================================================== */}
+
             <form
-                className={styles.form}
+                className={
+                    styles.formCard
+                }
                 onSubmit={handleSubmit(
                     onSubmit,
                 )}
@@ -172,112 +209,104 @@ export function UserCreatePage() {
                     </div>
                 )}
 
-                <section
+                {/* =================================================
+            DADOS DO USUÁRIO
+            ================================================= */}
+
+                <div
                     className={
-                        styles.formSection
+                        styles.sectionTitle
                     }
                 >
-                    <div
-                        className={
-                            styles.sectionHeader
-                        }
-                    >
-                        <h2>
-                            Dados do Usuário
-                        </h2>
-                    </div>
+                    <span>
+                        Dados do Usuário
+                    </span>
 
                     <div
                         className={
-                            styles.formGrid
+                            styles.sectionLine
+                        }
+                    />
+                </div>
+
+                <div
+                    className={
+                        styles.userGrid
+                    }
+                >
+                    {/* NOME */}
+
+                    <div
+                        className={
+                            styles.field
                         }
                     >
                         <div
-                            className={
-                                styles.field
-                            }
+                            className={`${styles.fieldControl} ${errors.name
+                                    ? styles.fieldControlError
+                                    : ''
+                                }`}
                         >
                             <label
                                 htmlFor="name"
                             >
-                                Nome
+                                Nome Completo
                             </label>
 
                             <input
                                 id="name"
                                 type="text"
                                 autoComplete="name"
-                                placeholder="Digite o nome"
-                                className={
-                                    errors.name
-                                        ? styles.inputError
-                                        : ''
-                                }
+                                placeholder="Insira o nome completo*"
+                                maxLength={150}
                                 {...register(
                                     'name',
                                 )}
                             />
-
-                            {errors.name && (
-                                <span
-                                    className={
-                                        styles.fieldError
-                                    }
-                                >
-                                    {
-                                        errors
-                                            .name
-                                            .message
-                                    }
-                                </span>
-                            )}
                         </div>
 
                         <div
                             className={
-                                styles.field
+                                styles.fieldMeta
                             }
                         >
-                            <label
-                                htmlFor="email"
-                            >
-                                E-mail
-                            </label>
-
-                            <input
-                                id="email"
-                                type="email"
-                                autoComplete="email"
-                                placeholder="Digite o e-mail"
-                                className={
-                                    errors.email
-                                        ? styles.inputError
-                                        : ''
-                                }
-                                {...register(
-                                    'email',
-                                )}
-                            />
-
-                            {errors.email && (
+                            {errors.name ? (
                                 <span
                                     className={
                                         styles.fieldError
                                     }
                                 >
                                     {
-                                        errors
-                                            .email
+                                        errors.name
                                             .message
                                     }
                                 </span>
+                            ) : (
+                                <span />
                             )}
-                        </div>
 
+                            <span
+                                className={
+                                    styles.fieldHint
+                                }
+                            >
+                                • Máx. 150 Caracteres
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* MATRÍCULA */}
+
+                    <div
+                        className={
+                            styles.field
+                        }
+                    >
                         <div
-                            className={
-                                styles.field
-                            }
+                            className={`${styles.fieldControl} ${errors.registration
+                                    ? styles.fieldControlError
+                                    : ''
+                                }`}
                         >
                             <label
                                 htmlFor="registration"
@@ -290,18 +319,20 @@ export function UserCreatePage() {
                                 type="text"
                                 inputMode="numeric"
                                 autoComplete="off"
-                                placeholder="Digite a matrícula"
-                                className={
-                                    errors.registration
-                                        ? styles.inputError
-                                        : ''
-                                }
+                                placeholder="Insira o Nº da matrícula"
+                                maxLength={20}
                                 {...register(
                                     'registration',
                                 )}
                             />
+                        </div>
 
-                            {errors.registration && (
+                        <div
+                            className={
+                                styles.fieldMeta
+                            }
+                        >
+                            {errors.registration ? (
                                 <span
                                     className={
                                         styles.fieldError
@@ -313,35 +344,119 @@ export function UserCreatePage() {
                                             .message
                                     }
                                 </span>
+                            ) : (
+                                <span />
                             )}
+
+                            <span
+                                className={
+                                    styles.fieldHint
+                                }
+                            >
+                                • Somente números
+                                {' '}
+                                • Máx. 20 Caracteres
+                            </span>
                         </div>
                     </div>
-                </section>
 
-                <section
-                    className={
-                        styles.formSection
-                    }
-                >
-                    <div
-                        className={
-                            styles.sectionHeader
-                        }
-                    >
-                        <h2>
-                            Dados de acesso
-                        </h2>
-                    </div>
+                    {/* E-MAIL */}
 
                     <div
                         className={
-                            styles.formGrid
+                            styles.field
                         }
                     >
                         <div
+                            className={`${styles.fieldControl} ${errors.email
+                                    ? styles.fieldControlError
+                                    : ''
+                                }`}
+                        >
+                            <label
+                                htmlFor="email"
+                            >
+                                E-mail
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                autoComplete="email"
+                                placeholder="Insira o E-mail*"
+                                maxLength={254}
+                                {...register(
+                                    'email',
+                                )}
+                            />
+                        </div>
+
+                        <div
                             className={
-                                styles.field
+                                styles.fieldMeta
                             }
+                        >
+                            {errors.email ? (
+                                <span
+                                    className={
+                                        styles.fieldError
+                                    }
+                                >
+                                    {
+                                        errors.email
+                                            .message
+                                    }
+                                </span>
+                            ) : (
+                                <span />
+                            )}
+
+                            <span
+                                className={
+                                    styles.fieldHint
+                                }
+                            >
+                                • Máx. 254 Caracteres
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* =================================================
+            DADOS DE ACESSO
+            ================================================= */}
+
+                <div
+                    className={`${styles.sectionTitle} ${styles.accessTitle}`}
+                >
+                    <span>
+                        Dados de acesso
+                    </span>
+
+                    <div
+                        className={
+                            styles.sectionLine
+                        }
+                    />
+                </div>
+
+                <div
+                    className={
+                        styles.accessGrid
+                    }
+                >
+                    {/* SENHA */}
+
+                    <div
+                        className={
+                            styles.field
+                        }
+                    >
+                        <div
+                            className={`${styles.fieldControl} ${styles.passwordControl} ${errors.password
+                                    ? styles.fieldControlError
+                                    : ''
+                                }`}
                         >
                             <label
                                 htmlFor="password"
@@ -351,78 +466,156 @@ export function UserCreatePage() {
 
                             <input
                                 id="password"
-                                type="password"
-                                autoComplete="new-password"
-                                placeholder="Digite a senha"
-                                maxLength={6}
-                                className={
-                                    errors.password
-                                        ? styles.inputError
-                                        : ''
+                                type={
+                                    showPassword
+                                        ? 'text'
+                                        : 'password'
                                 }
+                                autoComplete="new-password"
+                                placeholder="Senha"
+                                maxLength={6}
                                 {...register(
                                     'password',
                                 )}
                             />
 
-                            {errors.password && (
-                                <span
-                                    className={
-                                        styles.fieldError
-                                    }
-                                >
-                                    {
-                                        errors
-                                            .password
-                                            .message
-                                    }
-                                </span>
-                            )}
+                            <button
+                                type="button"
+                                className={
+                                    styles.passwordToggle
+                                }
+                                onClick={() =>
+                                    setShowPassword(
+                                        (current) =>
+                                            !current,
+                                    )
+                                }
+                                aria-label={
+                                    showPassword
+                                        ? 'Ocultar senha'
+                                        : 'Visualizar senha'
+                                }
+                            >
+                                {showPassword ? (
+                                    <EyeOff
+                                        size={19}
+                                        strokeWidth={
+                                            1.8
+                                        }
+                                    />
+                                ) : (
+                                    <Eye
+                                        size={19}
+                                        strokeWidth={
+                                            1.8
+                                        }
+                                    />
+                                )}
+                            </button>
                         </div>
 
+                        {errors.password && (
+                            <span
+                                className={
+                                    styles.fieldErrorStandalone
+                                }
+                            >
+                                {
+                                    errors.password
+                                        .message
+                                }
+                            </span>
+                        )}
+                    </div>
+
+                    {/* CONFIRMAR SENHA */}
+
+                    <div
+                        className={
+                            styles.field
+                        }
+                    >
                         <div
-                            className={
-                                styles.field
-                            }
+                            className={`${styles.fieldControl} ${styles.passwordControl} ${errors.confirmPassword
+                                    ? styles.fieldControlError
+                                    : ''
+                                }`}
                         >
                             <label
                                 htmlFor="confirmPassword"
                             >
-                                Confirmar senha
+                                Repetir Senha
                             </label>
 
                             <input
                                 id="confirmPassword"
-                                type="password"
-                                autoComplete="new-password"
-                                placeholder="Confirme a senha"
-                                maxLength={6}
-                                className={
-                                    errors.confirmPassword
-                                        ? styles.inputError
-                                        : ''
+                                type={
+                                    showConfirmPassword
+                                        ? 'text'
+                                        : 'password'
                                 }
+                                autoComplete="new-password"
+                                placeholder="Repetir Senha"
+                                maxLength={6}
                                 {...register(
                                     'confirmPassword',
                                 )}
                             />
 
-                            {errors.confirmPassword && (
-                                <span
-                                    className={
-                                        styles.fieldError
-                                    }
-                                >
-                                    {
-                                        errors
-                                            .confirmPassword
-                                            .message
-                                    }
-                                </span>
-                            )}
+                            <button
+                                type="button"
+                                className={
+                                    styles.passwordToggle
+                                }
+                                onClick={() =>
+                                    setShowConfirmPassword(
+                                        (current) =>
+                                            !current,
+                                    )
+                                }
+                                aria-label={
+                                    showConfirmPassword
+                                        ? 'Ocultar confirmação da senha'
+                                        : 'Visualizar confirmação da senha'
+                                }
+                            >
+                                {showConfirmPassword ? (
+                                    <EyeOff
+                                        size={19}
+                                        strokeWidth={
+                                            1.8
+                                        }
+                                    />
+                                ) : (
+                                    <Eye
+                                        size={19}
+                                        strokeWidth={
+                                            1.8
+                                        }
+                                    />
+                                )}
+                            </button>
                         </div>
+
+                        {errors.confirmPassword && (
+                            <span
+                                className={
+                                    styles.fieldErrorStandalone
+                                }
+                            >
+                                {
+                                    errors
+                                        .confirmPassword
+                                        .message
+                                }
+                            </span>
+                        )}
                     </div>
-                </section>
+                </div>
+
+                {/* =================================================
+            BOTÕES
+            ================================================= */}
 
                 <footer
                     className={
@@ -441,20 +634,16 @@ export function UserCreatePage() {
                     <button
                         type="submit"
                         className={
-                            styles.saveButton
+                            styles.submitButton
                         }
                         disabled={
                             !isValid ||
                             isSubmitting
                         }
                     >
-                        <Save
-                            size={17}
-                        />
-
                         {isSubmitting
-                            ? 'Salvando...'
-                            : 'Salvar'}
+                            ? 'Cadastrando...'
+                            : 'Cadastrar'}
                     </button>
                 </footer>
             </form>
