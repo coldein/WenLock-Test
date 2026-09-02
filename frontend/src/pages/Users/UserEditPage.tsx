@@ -28,6 +28,8 @@ import type {
     User,
 } from '../../types/user';
 
+import { UserCancelModal } from './UserCancelModal';
+
 import styles from './UserEditPage.module.css';
 
 interface ApiErrorResponse {
@@ -67,6 +69,12 @@ export function UserEditPage() {
     const [
         showConfirmPassword,
         setShowConfirmPassword,
+    ] = useState(false);
+
+ 
+    const [
+        cancelModalOpen,
+        setCancelModalOpen,
     ] = useState(false);
 
     const {
@@ -122,7 +130,6 @@ export function UserEditPage() {
 
                 try {
                     setLoading(true);
-
                     setLoadError(null);
 
                     const response =
@@ -180,11 +187,6 @@ export function UserEditPage() {
         const normalizedRegistration =
             data.registration.trim();
 
-        /*
-         * PATCH:
-         * enviamos somente o que realmente mudou.
-         */
-
         if (
             normalizedName !==
             user.name
@@ -209,10 +211,6 @@ export function UserEditPage() {
                 normalizedRegistration;
         }
 
-        /*
-         * Senha vazia:
-         * mantém a senha atual.
-         */
         if (data.password) {
             payload.password =
                 data.password;
@@ -268,6 +266,33 @@ export function UserEditPage() {
             );
         }
     };
+
+    /* =======================================================
+       CANCELAR
+       ======================================================= */
+
+    const handleCancel = () => {
+    
+        if (!isDirty) {
+            navigate('/users');
+
+            return;
+        }
+
+        setCancelModalOpen(true);
+    };
+
+    const handleCloseCancelModal =
+        () => {
+            setCancelModalOpen(false);
+        };
+
+    const handleConfirmCancel =
+        () => {
+            setCancelModalOpen(false);
+
+            navigate('/users');
+        };
 
     /* =======================================================
        LOADING
@@ -359,12 +384,17 @@ export function UserEditPage() {
                     className={
                         styles.breadcrumb
                     }
+                    aria-label="Navegação estrutural"
                 >
                     <Link to="/users">
                         Usuários
                     </Link>
 
-                    <span>
+                    <span
+                        className={
+                            styles.breadcrumbSeparator
+                        }
+                    >
                         &gt;
                     </span>
 
@@ -383,9 +413,11 @@ export function UserEditPage() {
                         className={
                             styles.titleBack
                         }
+                        aria-label="Voltar para usuários"
                     >
                         <ChevronLeft
                             size={27}
+                            strokeWidth={2}
                         />
                     </Link>
 
@@ -417,8 +449,8 @@ export function UserEditPage() {
             }
         >
             {/* ===================================================
-          BREADCRUMB
-          =================================================== */}
+                BREADCRUMB
+                =================================================== */}
 
             <nav
                 className={
@@ -444,8 +476,8 @@ export function UserEditPage() {
             </nav>
 
             {/* ===================================================
-          TÍTULO
-          =================================================== */}
+                TÍTULO
+                =================================================== */}
 
             <div
                 className={
@@ -476,8 +508,8 @@ export function UserEditPage() {
             </div>
 
             {/* ===================================================
-          FORMULÁRIO
-          =================================================== */}
+                FORMULÁRIO
+                =================================================== */}
 
             <form
                 className={
@@ -499,8 +531,8 @@ export function UserEditPage() {
                 )}
 
                 {/* =================================================
-            DADOS DO USUÁRIO
-            ================================================= */}
+                    DADOS DO USUÁRIO
+                    ================================================= */}
 
                 <div
                     className={
@@ -712,8 +744,8 @@ export function UserEditPage() {
                 </div>
 
                 {/* =================================================
-            DADOS DE ACESSO
-            ================================================= */}
+                    DADOS DE ACESSO
+                    ================================================= */}
 
                 <div
                     className={`${styles.sectionTitle} ${styles.accessTitle}`}
@@ -775,7 +807,9 @@ export function UserEditPage() {
                                 }
                                 onClick={() =>
                                     setShowPassword(
-                                        (current) =>
+                                        (
+                                            current,
+                                        ) =>
                                             !current,
                                     )
                                 }
@@ -869,7 +903,9 @@ export function UserEditPage() {
                                 }
                                 onClick={() =>
                                     setShowConfirmPassword(
-                                        (current) =>
+                                        (
+                                            current,
+                                        ) =>
                                             !current,
                                     )
                                 }
@@ -914,22 +950,26 @@ export function UserEditPage() {
                 </div>
 
                 {/* =================================================
-            AÇÕES
-            ================================================= */}
+                    AÇÕES
+                    ================================================= */}
 
                 <footer
                     className={
                         styles.formActions
                     }
                 >
-                    <Link
-                        to="/users"
+                    {}
+                    <button
+                        type="button"
                         className={
                             styles.cancelButton
                         }
+                        onClick={
+                            handleCancel
+                        }
                     >
                         Cancelar
-                    </Link>
+                    </button>
 
                     <button
                         type="submit"
@@ -948,6 +988,22 @@ export function UserEditPage() {
                     </button>
                 </footer>
             </form>
+
+            {/* ===================================================
+                MODAL DE CANCELAMENTO
+                =================================================== */}
+
+            <UserCancelModal
+                open={
+                    cancelModalOpen
+                }
+                onClose={
+                    handleCloseCancelModal
+                }
+                onConfirm={
+                    handleConfirmCancel
+                }
+            />
         </section>
     );
 }

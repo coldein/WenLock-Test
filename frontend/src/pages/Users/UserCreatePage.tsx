@@ -19,6 +19,8 @@ import {
 
 import { usersService } from '../../services/users.service';
 
+import { UserCancelModal } from './UserCancelModal';
+
 import styles from './UserCreatePage.module.css';
 
 interface ApiErrorResponse {
@@ -45,18 +47,25 @@ export function UserCreatePage() {
         null,
     );
 
+    const [
+        cancelModalOpen,
+        setCancelModalOpen,
+    ] = useState(false);
+
     const {
         register,
         handleSubmit,
         formState: {
             errors,
             isValid,
+            isDirty,
             isSubmitting,
         },
     } = useForm<CreateUserFormData>({
         resolver: zodResolver(
             createUserSchema,
         ),
+
         mode: 'onChange',
 
         defaultValues: {
@@ -67,6 +76,10 @@ export function UserCreatePage() {
             confirmPassword: '',
         },
     });
+
+    /* =======================================================
+       CADASTRAR
+       ======================================================= */
 
     const onSubmit = async (
         data: CreateUserFormData,
@@ -123,13 +136,39 @@ export function UserCreatePage() {
         }
     };
 
+    /* =======================================================
+       CANCELAR
+       ======================================================= */
+
+    const handleCancel = () => {
+        if (!isDirty) {
+            navigate('/users');
+
+            return;
+        }
+
+        setCancelModalOpen(true);
+    };
+
+    const handleCloseCancelModal =
+        () => {
+            setCancelModalOpen(false);
+        };
+
+    const handleConfirmCancel =
+        () => {
+            setCancelModalOpen(false);
+
+            navigate('/users');
+        };
+
     return (
         <section
             className={styles.page}
         >
             {/* ===================================================
-          BREADCRUMB
-          =================================================== */}
+                BREADCRUMB
+                =================================================== */}
 
             <nav
                 className={
@@ -155,8 +194,8 @@ export function UserCreatePage() {
             </nav>
 
             {/* ===================================================
-          TÍTULO
-          =================================================== */}
+                TÍTULO
+                =================================================== */}
 
             <div
                 className={
@@ -187,8 +226,8 @@ export function UserCreatePage() {
             </div>
 
             {/* ===================================================
-          FORMULÁRIO
-          =================================================== */}
+                FORMULÁRIO
+                =================================================== */}
 
             <form
                 className={
@@ -210,8 +249,8 @@ export function UserCreatePage() {
                 )}
 
                 {/* =================================================
-            DADOS DO USUÁRIO
-            ================================================= */}
+                    DADOS DO USUÁRIO
+                    ================================================= */}
 
                 <div
                     className={
@@ -243,8 +282,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${errors.name
-                                    ? styles.fieldControlError
-                                    : ''
+                                ? styles.fieldControlError
+                                : ''
                                 }`}
                         >
                             <label
@@ -304,8 +343,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${errors.registration
-                                    ? styles.fieldControlError
-                                    : ''
+                                ? styles.fieldControlError
+                                : ''
                                 }`}
                         >
                             <label
@@ -369,8 +408,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${errors.email
-                                    ? styles.fieldControlError
-                                    : ''
+                                ? styles.fieldControlError
+                                : ''
                                 }`}
                         >
                             <label
@@ -423,8 +462,8 @@ export function UserCreatePage() {
                 </div>
 
                 {/* =================================================
-            DADOS DE ACESSO
-            ================================================= */}
+                    DADOS DE ACESSO
+                    ================================================= */}
 
                 <div
                     className={`${styles.sectionTitle} ${styles.accessTitle}`}
@@ -454,8 +493,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${styles.passwordControl} ${errors.password
-                                    ? styles.fieldControlError
-                                    : ''
+                                ? styles.fieldControlError
+                                : ''
                                 }`}
                         >
                             <label
@@ -486,7 +525,9 @@ export function UserCreatePage() {
                                 }
                                 onClick={() =>
                                     setShowPassword(
-                                        (current) =>
+                                        (
+                                            current,
+                                        ) =>
                                             !current,
                                     )
                                 }
@@ -537,8 +578,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${styles.passwordControl} ${errors.confirmPassword
-                                    ? styles.fieldControlError
-                                    : ''
+                                ? styles.fieldControlError
+                                : ''
                                 }`}
                         >
                             <label
@@ -569,7 +610,9 @@ export function UserCreatePage() {
                                 }
                                 onClick={() =>
                                     setShowConfirmPassword(
-                                        (current) =>
+                                        (
+                                            current,
+                                        ) =>
                                             !current,
                                     )
                                 }
@@ -614,22 +657,26 @@ export function UserCreatePage() {
                 </div>
 
                 {/* =================================================
-            BOTÕES
-            ================================================= */}
+                    BOTÕES
+                    ================================================= */}
 
                 <footer
                     className={
                         styles.formActions
                     }
                 >
-                    <Link
-                        to="/users"
+                    { }
+                    <button
+                        type="button"
                         className={
                             styles.cancelButton
                         }
+                        onClick={
+                            handleCancel
+                        }
                     >
                         Cancelar
-                    </Link>
+                    </button>
 
                     <button
                         type="submit"
@@ -647,6 +694,22 @@ export function UserCreatePage() {
                     </button>
                 </footer>
             </form>
+
+            {/* ===================================================
+                MODAL DE CANCELAMENTO
+                =================================================== */}
+
+            <UserCancelModal
+                open={
+                    cancelModalOpen
+                }
+                onClose={
+                    handleCloseCancelModal
+                }
+                onConfirm={
+                    handleConfirmCancel
+                }
+            />
         </section>
     );
 }

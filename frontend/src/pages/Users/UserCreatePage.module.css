@@ -257,10 +257,6 @@
 
     border: 0;
 
-    /*
-     * Deixamos a borda transparente para
-     * impedir mudança de altura ao focar.
-     */
     border-bottom:
         2px solid
         transparent;
@@ -352,14 +348,6 @@
    FOCUS
    ========================================================= */
 
-/*
- * Quando o usuário entra no campo:
- *
- * 1. mostramos a label pequena;
- * 2. escondemos o placeholder;
- * 3. descemos o conteúdo;
- * 4. mostramos a linha cyan.
- */
 .fieldControl:focus-within {
     border-bottom-color:
         var(--color-primary);
@@ -383,10 +371,6 @@
    CAMPO PREENCHIDO
    ========================================================= */
 
-/*
- * Mantém o floating label mesmo depois
- * que o usuário tira o foco.
- */
 .fieldControl:has(
     input:not(:placeholder-shown)
 ) {
@@ -560,10 +544,6 @@
 
     gap: 8px;
 
-    /*
-     * Mantém os botões no rodapé do card,
-     * igual ao protótipo.
-     */
     margin-top: auto;
 
     padding-top: 29px;
@@ -669,11 +649,6 @@
     outline-offset: 2px;
 }
 
-/*
- * Igual ao Adobe:
- * enquanto o formulário for inválido,
- * o botão fica cinza.
- */
 .submitButton:disabled {
     border-color: #d8dada;
 
