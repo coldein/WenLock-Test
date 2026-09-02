@@ -65,7 +65,7 @@ export function AppLayout() {
 
         <nav className={styles.navigation}>
           <NavLink
-            to="/"
+            to="/home"
             end
             className={({ isActive }) =>
               `${styles.navItem} ${
