@@ -102,7 +102,7 @@ export function UserCreatePage() {
                         toast: {
                             type: 'success',
                             message:
-                                'Dados salvos com sucesso!',
+                                'Cadastro realizado',
                         },
                     },
                 },
