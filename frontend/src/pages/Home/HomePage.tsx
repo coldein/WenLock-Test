@@ -19,7 +19,7 @@ export function HomePage() {
 
             <section className={styles.card}>
                 <h2 className={styles.greeting}>
-                    Olá!
+                    Olá Usuário!
                 </h2>
 
                 <p className={styles.date}>
