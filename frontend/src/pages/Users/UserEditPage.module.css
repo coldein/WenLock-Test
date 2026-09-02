@@ -1,0 +1,688 @@
+.page {
+    width: 100%;
+}
+
+/* =========================================================
+   BREADCRUMB
+   ========================================================= */
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin:
+        0 0 5px 2px;
+
+    color: #536766;
+
+    font-size: 8px;
+    font-weight: 400;
+    line-height: 12px;
+}
+
+.breadcrumb a {
+    color: #536766;
+
+    text-decoration: none;
+
+    transition:
+        color 0.15s ease;
+}
+
+.breadcrumb a:hover {
+    color:
+        var(--color-primary-dark);
+}
+
+.breadcrumbSeparator {
+    color: #82908f;
+}
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.titleRow {
+    display: flex;
+    align-items: center;
+
+    gap: 2px;
+
+    margin-bottom: 7px;
+}
+
+.titleBack {
+    width: 27px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--color-text);
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition:
+        color 0.15s ease;
+}
+
+.titleBack:hover {
+    color: var(--color-primary-dark);
+}
+
+.titleBack:focus-visible {
+    border-radius: 3px;
+
+    outline:
+        2px solid var(--color-primary);
+
+    outline-offset: 1px;
+}
+
+.pageTitle {
+    margin: 0;
+
+    color:
+        var(--color-text);
+
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 36px;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.formCard {
+    width: 100%;
+    min-height: 337px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding:
+        13px 14px 16px;
+
+    border:
+        1px solid #dfe3e5;
+
+    border-radius: 4px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================================
+   ERROS
+   ========================================================= */
+
+.submitError,
+.loadError {
+    margin-bottom: 12px;
+
+    padding:
+        9px 11px;
+
+    border-radius: 3px;
+
+    background:
+        rgba(176,
+            0,
+            32,
+            0.08);
+
+    color:
+        var(--color-danger);
+
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 15px;
+}
+
+.loadingState {
+    min-height: 180px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid #dfe3e5;
+
+    border-radius: 4px;
+
+    background: #ffffff;
+
+    color:
+        var(--color-muted);
+
+    font-size: 12px;
+
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================================================
+   SEÇÕES
+   ========================================================= */
+
+.sectionTitle {
+    display: grid;
+
+    grid-template-columns:
+        auto 1fr;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 15px;
+}
+
+.sectionTitle span {
+    color:
+        var(--color-text);
+
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 14px;
+
+    white-space: nowrap;
+}
+
+.sectionLine {
+    height: 1px;
+
+    background: #aeb7b9;
+}
+
+.accessTitle {
+    margin-top: 15px;
+}
+
+/* =========================================================
+   GRIDS
+   ========================================================= */
+
+.userGrid,
+.accessGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,
+            minmax(0,
+                1fr));
+
+    column-gap: 19px;
+}
+
+.userGrid {
+    row-gap: 9px;
+}
+
+.accessGrid {
+    row-gap: 8px;
+}
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.field {
+    min-width: 0;
+}
+
+.fieldControl {
+    position: relative;
+
+    width: 100%;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+
+    padding:
+        0 11px;
+
+    border: 0;
+
+    border-bottom:
+        2px solid transparent;
+
+    background: #f3f3f3;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
+}
+
+/* =========================================================
+   LABEL FLUTUANTE
+   ========================================================= */
+
+.fieldControl label {
+    position: absolute;
+
+    top: 4px;
+    left: 11px;
+
+    z-index: 1;
+
+    margin: 0;
+
+    color:
+        var(--color-primary-dark);
+
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 11px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.12s ease;
+}
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.fieldControl input {
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+
+    padding: 0;
+
+    border: 0;
+    outline: 0;
+
+    background:
+        transparent;
+
+    color: #3e5552;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+
+    transition:
+        padding 0.12s ease;
+}
+
+.fieldControl input::placeholder {
+    color: #607371;
+
+    opacity: 1;
+}
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.fieldControl:hover {
+    background: #eeeeee;
+}
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.fieldControl:focus-within {
+    border-bottom-color:
+        var(--color-primary);
+
+    background: #eeeeee;
+}
+
+.fieldControl:focus-within label {
+    opacity: 1;
+}
+
+.fieldControl:focus-within input {
+    padding-top: 10px;
+}
+
+.fieldControl:focus-within input::placeholder {
+    color: transparent;
+}
+
+/* =========================================================
+   CAMPO PREENCHIDO
+   ========================================================= */
+
+/*
+ * Na edição Nome/E-mail/Matrícula chegam
+ * preenchidos após o GET.
+ *
+ * Portanto já entram automaticamente
+ * com o floating label.
+ */
+.fieldControl:has(input:not(:placeholder-shown)) {
+    border-bottom-color:
+        var(--color-primary);
+}
+
+.fieldControl:has(input:not(:placeholder-shown)) label {
+    opacity: 1;
+}
+
+.fieldControl:has(input:not(:placeholder-shown)) input {
+    padding-top: 10px;
+}
+
+.fieldControl:has(input:not(:placeholder-shown)) input::placeholder {
+    color: transparent;
+}
+
+/* =========================================================
+   ERRO NO CAMPO
+   ========================================================= */
+
+.fieldControlError {
+    border-bottom-color:
+        var(--color-danger);
+}
+
+.fieldControlError:focus-within {
+    border-bottom-color:
+        var(--color-danger);
+}
+
+/* =========================================================
+   META DOS CAMPOS
+   ========================================================= */
+
+.fieldMeta {
+    min-height: 13px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding:
+        2px 1px 0;
+}
+
+.fieldHint {
+    margin-left: auto;
+
+    color: #405653;
+
+    font-size: 7px;
+    font-weight: 400;
+    line-height: 10px;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+.fieldError {
+    color:
+        var(--color-danger);
+
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 10px;
+}
+
+.fieldErrorStandalone {
+    display: block;
+
+    margin-top: 2px;
+
+    color:
+        var(--color-danger);
+
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 10px;
+}
+
+/* =========================================================
+   AVISO DE SENHA OPCIONAL
+   ========================================================= */
+
+.passwordHint {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #607371;
+
+    font-size: 7px;
+    font-weight: 400;
+    line-height: 10px;
+}
+
+/* =========================================================
+   SENHAS
+   ========================================================= */
+
+.passwordControl {
+    padding-right: 42px;
+}
+
+.passwordControl input {
+    padding-right: 5px;
+}
+
+.passwordToggle {
+    position: absolute;
+
+    top: 50%;
+    right: 8px;
+
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 3px;
+
+    background:
+        transparent;
+
+    color: #687b91;
+
+    transform:
+        translateY(-50%);
+
+    cursor: pointer;
+
+    transition:
+        color 0.15s ease,
+        background 0.15s ease;
+}
+
+.passwordToggle:hover {
+    background:
+        rgba(0,
+            170,
+            193,
+            0.06);
+
+    color:
+        var(--color-primary-dark);
+}
+
+.passwordToggle:focus-visible {
+    outline:
+        2px solid var(--color-primary);
+
+    outline-offset: 1px;
+}
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+.formActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: auto;
+
+    padding-top: 29px;
+}
+
+.cancelButton,
+.submitButton {
+    width: 121px;
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border-radius: 5px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+/* =========================================================
+   CANCELAR
+   ========================================================= */
+
+.cancelButton {
+    border:
+        1px solid #506966;
+
+    background: #ffffff;
+
+    color:
+        var(--color-text);
+}
+
+.cancelButton:hover {
+    border-color:
+        var(--color-primary-dark);
+
+    background:
+        rgba(0,
+            170,
+            193,
+            0.04);
+
+    color:
+        var(--color-primary-dark);
+}
+
+/* =========================================================
+   SALVAR
+   ========================================================= */
+
+.submitButton {
+    border:
+        1px solid var(--color-primary-dark);
+
+    background:
+        var(--color-primary-dark);
+
+    color: #ffffff;
+
+    cursor: pointer;
+}
+
+.submitButton:hover:not(:disabled) {
+    border-color:
+        var(--color-primary-hover);
+
+    background:
+        var(--color-primary-hover);
+}
+
+.submitButton:disabled {
+    border-color: #d8dada;
+
+    background: #d8dada;
+
+    color: #768787;
+
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+    .userGrid,
+    .accessGrid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .fieldHint {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 480px) {
+    .pageTitle {
+        font-size: 22px;
+        line-height: 30px;
+    }
+
+    .formCard {
+        min-height: 0;
+
+        padding:
+            12px 10px 14px;
+    }
+
+    .formActions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+
+        padding-top: 25px;
+    }
+
+    .cancelButton,
+    .submitButton {
+        width: 100%;
+    }
+}

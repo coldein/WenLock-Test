@@ -1,0 +1,96 @@
+:root {
+  font-family:
+    'Manrope',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  /* WenLock - Adobe XD */
+  --color-primary: #00aac1;
+  --color-primary-dark: #0290a4;
+  --color-primary-hover: #00606d;
+
+  --color-sidebar: #0d1931;
+
+  --color-background: #f0f0f0;
+  --color-surface: #ffffff;
+
+  --color-danger: #b00020;
+
+  --color-text: #0b2b25;
+  --color-title: #0a453a;
+  --color-muted: #6f7d7d;
+
+  --color-success: #00c857;
+  --color-warning: #ffcc00;
+  --color-orange: #ff7700;
+  --color-error: #ff4b4a;
+
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-h5: 24px;
+  --font-size-h4: 26px;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  color: var(--color-text);
+  background: var(--color-background);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+
+  background: var(--color-background);
+  color: var(--color-text);
+
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}

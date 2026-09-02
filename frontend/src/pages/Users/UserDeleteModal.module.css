@@ -1,0 +1,245 @@
+/* =========================================================
+   FUNDO DO MODAL
+   ========================================================= */
+
+.backdrop {
+    position: fixed;
+    z-index: 1000;
+
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    /*
+     * Overlay cinza semelhante ao Adobe.
+     */
+    background:
+        rgba(0, 0, 0, 0.13);
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+    width: 100%;
+    max-width: 335px;
+
+    padding:
+        27px 32px 20px;
+
+    border: 1px solid #d9dede;
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.14);
+
+    text-align: center;
+
+    animation:
+        modalEnter 0.15s ease-out;
+}
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.title {
+    margin:
+        0 0 13px;
+
+    color:
+        var(--color-text);
+
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 25px;
+}
+
+/* =========================================================
+   DESCRIÇÃO
+   ========================================================= */
+
+.description {
+    margin: 0;
+
+    color:
+        var(--color-text);
+
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+/* =========================================================
+   ERRO
+   ========================================================= */
+
+.error {
+    margin-top: 13px;
+
+    padding:
+        8px 10px;
+
+    border-radius: 4px;
+
+    background:
+        rgba(176, 0, 32, 0.08);
+
+    color:
+        var(--color-danger);
+
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 15px;
+
+    text-align: left;
+}
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 30px;
+}
+
+.cancelButton,
+.confirmButton {
+    width: 88px;
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border-radius: 5px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+/* =========================================================
+   NÃO
+   ========================================================= */
+
+.cancelButton {
+    border:
+        1px solid #47605c;
+
+    background: #ffffff;
+
+    color:
+        var(--color-text);
+}
+
+.cancelButton:hover:not(:disabled) {
+    border-color:
+        var(--color-primary-dark);
+
+    background:
+        rgba(0, 170, 193, 0.04);
+
+    color:
+        var(--color-primary-dark);
+}
+
+/* =========================================================
+   SIM
+   ========================================================= */
+
+.confirmButton {
+    border:
+        1px solid var(--color-primary-dark);
+
+    background:
+        var(--color-primary-dark);
+
+    color: #ffffff;
+}
+
+.confirmButton:hover:not(:disabled) {
+    border-color:
+        var(--color-primary-hover);
+
+    background:
+        var(--color-primary-hover);
+}
+
+/* =========================================================
+   DESABILITADOS
+   ========================================================= */
+
+.cancelButton:disabled,
+.confirmButton:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   FOCO
+   ========================================================= */
+
+.cancelButton:focus-visible,
+.confirmButton:focus-visible {
+    outline:
+        2px solid var(--color-primary);
+
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   ANIMAÇÃO
+   ========================================================= */
+
+@keyframes modalEnter {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 420px) {
+    .modal {
+        max-width: 310px;
+
+        padding:
+            25px 22px 20px;
+    }
+}

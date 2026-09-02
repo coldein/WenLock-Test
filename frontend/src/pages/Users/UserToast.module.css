@@ -1,0 +1,138 @@
+.toast {
+    position: fixed;
+
+    top: 100px;
+    right: 24px;
+
+    z-index: 1200;
+
+    width: 307px;
+    min-height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        0 10px 0 11px;
+
+    border-radius: 4px;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.12);
+
+    animation:
+        toastEnter 0.2s ease-out;
+}
+
+/* =========================================================
+   SUCESSO
+   ========================================================= */
+
+.success {
+    background: #00c857;
+}
+
+/* =========================================================
+   AVISO
+   ========================================================= */
+
+.warning {
+    background: #ffad66;
+}
+
+/* =========================================================
+   CONTEÚDO
+   ========================================================= */
+
+.content {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 16px;
+}
+
+.content svg {
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   FECHAR
+   ========================================================= */
+
+.closeButton {
+    width: 29px;
+    height: 29px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.15s ease;
+}
+
+.closeButton:hover {
+    opacity: 0.8;
+}
+
+.closeButton:focus-visible {
+    outline:
+        2px solid #ffffff;
+
+    outline-offset: 1px;
+}
+
+/* =========================================================
+   ANIMAÇÃO
+   ========================================================= */
+
+@keyframes toastEnter {
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateX(0);
+    }
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 480px) {
+    .toast {
+        top: 80px;
+        right: 12px;
+        left: 12px;
+
+        width: auto;
+    }
+}
