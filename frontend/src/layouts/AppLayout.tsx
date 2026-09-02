@@ -171,7 +171,7 @@ export function AppLayout() {
               Power by Conecthus
             </span>
 
-            <span>V 0.0.1</span>
+            <span>V 1.0.0</span>
           </footer>
         )}
       </aside>
