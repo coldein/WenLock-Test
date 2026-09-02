@@ -134,8 +134,8 @@ export function UsersPage() {
   useEffect(() => {
     const state =
       location.state as
-        | UsersLocationState
-        | null;
+      | UsersLocationState
+      | null;
 
     if (!state?.toast) {
       return;
@@ -275,7 +275,7 @@ export function UsersPage() {
       if (
         meta.totalPages === 0 ||
         page >=
-          meta.totalPages
+        meta.totalPages
       ) {
         return;
       }
@@ -290,7 +290,7 @@ export function UsersPage() {
     if (
       meta.totalPages === 0 ||
       page >=
-        meta.totalPages
+      meta.totalPages
     ) {
       return;
     }
@@ -383,7 +383,7 @@ export function UsersPage() {
             current + 1,
         );
       } catch (
-        requestError: unknown
+      requestError: unknown
       ) {
         if (
           axios.isAxiosError<ApiErrorResponse>(
@@ -430,10 +430,41 @@ export function UsersPage() {
       }
     };
 
+  /* =========================================================
+     ESTADOS VAZIOS
+     ========================================================= */
+
+  const hasActiveSearch =
+    debouncedSearch.trim().length > 0;
+
+  /*
+   * Não existem usuários cadastrados
+   * e nenhuma pesquisa está ativa.
+   */
+  const showRegisteredEmptyState =
+    !loading &&
+    !error &&
+    users.length === 0 &&
+    !hasActiveSearch;
+
+  /*
+   * Existe uma pesquisa ativa,
+   * mas ela não encontrou usuários.
+   */
+  const showSearchEmptyState =
+    !loading &&
+    !error &&
+    users.length === 0 &&
+    hasActiveSearch;
+
   return (
     <section
       className={styles.page}
     >
+      {/* =====================================================
+          TÍTULO
+          ===================================================== */}
+
       <h1
         className={
           styles.pageTitle
@@ -451,9 +482,7 @@ export function UsersPage() {
           styles.toolbar
         }
       >
-        {/* ===================================================
-            PESQUISA
-            =================================================== */}
+        {/* PESQUISA */}
 
         <div
           className={
@@ -503,6 +532,8 @@ export function UsersPage() {
           )}
         </div>
 
+        {/* CADASTRAR */}
+
         <Link
           to="/users/new"
           className={
@@ -530,136 +561,170 @@ export function UsersPage() {
       )}
 
       {/* =====================================================
+          SEM USUÁRIOS CADASTRADOS
+          ===================================================== */}
+
+      {showRegisteredEmptyState && (
+        <div
+          className={
+            styles.registeredEmptyState
+          }
+        >
+          <h2
+            className={
+              styles.registeredEmptyTitle
+            }
+          >
+            Nenhum Usuário Registrado
+          </h2>
+
+          <p
+            className={
+              styles.registeredEmptyDescription
+            }
+          >
+            Clique em “Cadastrar Usuário”
+            para começar a cadastrar.
+          </p>
+        </div>
+      )}
+
+      {/* =====================================================
           TABELA
           ===================================================== */}
 
-      <div
-        className={
-          styles.tableContainer
-        }
-      >
-        <table
+      {!showRegisteredEmptyState && (
+        <div
           className={
-            styles.table
+            styles.tableContainer
           }
         >
-          <thead>
-            <tr>
-              <th>
-                Nome
-              </th>
-
-              <th
-                className={
-                  styles.actionsHeader
-                }
-              >
-                Ações
-              </th>
-            </tr>
-          </thead>
-
-          {!loading &&
-            users.length > 0 && (
-              <tbody>
-                {users.map(
-                  (user) => (
-                    <tr
-                      key={
-                        user.id
-                      }
-                    >
-                      <td>
-                        {user.name}
-                      </td>
-
-                      <td
-                        className={
-                          styles.actions
-                        }
-                      >
-                        <button
-                          type="button"
-                          className={
-                            styles.actionButton
-                          }
-                          title="Visualizar"
-                          aria-label={`Visualizar ${user.name}`}
-                          onClick={() =>
-                            handleOpenView(
-                              user.id,
-                            )
-                          }
-                        >
-                          <Eye
-                            size={17}
-                          />
-                        </button>
-
-                        <button
-                          type="button"
-                          className={
-                            styles.actionButton
-                          }
-                          title="Editar"
-                          aria-label={`Editar ${user.name}`}
-                          onClick={() =>
-                            navigate(
-                              `/users/${user.id}/edit`,
-                            )
-                          }
-                        >
-                          <Pencil
-                            size={17}
-                          />
-                        </button>
-
-                        <button
-                          type="button"
-                          className={
-                            styles.actionButton
-                          }
-                          title="Excluir"
-                          aria-label={`Excluir ${user.name}`}
-                          onClick={() =>
-                            handleOpenDelete(
-                              user,
-                            )
-                          }
-                        >
-                          <Trash2
-                            size={17}
-                          />
-                        </button>
-                      </td>
-                    </tr>
-                  ),
-                )}
-              </tbody>
-            )}
-        </table>
-
-        {/* ===================================================
-            LOADING
-            =================================================== */}
-
-        {loading && (
-          <div
+          <table
             className={
-              styles.loadingState
+              styles.table
             }
           >
-            Carregando usuários...
-          </div>
-        )}
+            <thead>
+              <tr>
+                <th>
+                  Nome
+                </th>
 
-        {/* ===================================================
-            EMPTY STATE
-            =================================================== */}
+                <th
+                  className={
+                    styles.actionsHeader
+                  }
+                >
+                  Ações
+                </th>
+              </tr>
+            </thead>
 
-        {!loading &&
-          !error &&
-          users.length === 0 && (
+            {!loading &&
+              users.length > 0 && (
+                <tbody>
+                  {users.map(
+                    (user) => (
+                      <tr
+                        key={
+                          user.id
+                        }
+                      >
+                        <td>
+                          {user.name}
+                        </td>
+
+                        <td
+                          className={
+                            styles.actions
+                          }
+                        >
+                          {/* VISUALIZAR */}
+
+                          <button
+                            type="button"
+                            className={
+                              styles.actionButton
+                            }
+                            title="Visualizar"
+                            aria-label={`Visualizar ${user.name}`}
+                            onClick={() =>
+                              handleOpenView(
+                                user.id,
+                              )
+                            }
+                          >
+                            <Eye
+                              size={17}
+                            />
+                          </button>
+
+                          {/* EDITAR */}
+
+                          <button
+                            type="button"
+                            className={
+                              styles.actionButton
+                            }
+                            title="Editar"
+                            aria-label={`Editar ${user.name}`}
+                            onClick={() =>
+                              navigate(
+                                `/users/${user.id}/edit`,
+                              )
+                            }
+                          >
+                            <Pencil
+                              size={17}
+                            />
+                          </button>
+
+                          {/* EXCLUIR */}
+
+                          <button
+                            type="button"
+                            className={
+                              styles.actionButton
+                            }
+                            title="Excluir"
+                            aria-label={`Excluir ${user.name}`}
+                            onClick={() =>
+                              handleOpenDelete(
+                                user,
+                              )
+                            }
+                          >
+                            <Trash2
+                              size={17}
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              )}
+          </table>
+
+          {/* =================================================
+              LOADING
+              ================================================= */}
+
+          {loading && (
+            <div
+              className={
+                styles.loadingState
+              }
+            >
+              Carregando usuários...
+            </div>
+          )}
+
+          {/* =================================================
+              PESQUISA SEM RESULTADO
+              ================================================= */}
+
+          {showSearchEmptyState && (
             <div
               className={
                 styles.emptyState
@@ -696,7 +761,8 @@ export function UsersPage() {
               </p>
             </div>
           )}
-      </div>
+        </div>
+      )}
 
       {/* =====================================================
           PAGINAÇÃO
@@ -805,9 +871,9 @@ export function UsersPage() {
                   }
                   disabled={
                     meta.totalPages ===
-                      0 ||
+                    0 ||
                     page >=
-                      meta.totalPages
+                    meta.totalPages
                   }
                   aria-label="Próxima página"
                   title="Próxima página"
@@ -827,9 +893,9 @@ export function UsersPage() {
                   }
                   disabled={
                     meta.totalPages ===
-                      0 ||
+                    0 ||
                     page >=
-                      meta.totalPages
+                    meta.totalPages
                   }
                   aria-label="Última página"
                   title="Última página"
