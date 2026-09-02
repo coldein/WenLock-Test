@@ -65,6 +65,81 @@ Para executar o projeto localmente é necessário ter instalado:
 - npm
 - MySQL
 
+
+## Como executar
+
+Depois de clonar o repositório, crie o banco de dados:
+
+```sql
+CREATE DATABASE IF NOT EXISTS wenlock
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+```
+
+### 1. Backend
+
+```bash
+cd backend
+npm install
+```
+
+Crie um arquivo `.env` com base no `.env.example`:
+
+```env
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+DB_DATABASE=wenlock
+```
+
+Execute as migrations e inicie a API:
+
+```bash
+npm run migration:run
+npm run start:dev
+```
+
+API:
+
+```text
+http://localhost:3000/api
+```
+
+Swagger:
+
+```text
+http://localhost:3000/api/docs
+```
+
+### 2. Frontend
+
+Em outro terminal:
+
+```bash
+cd frontend
+npm install
+```
+
+Crie um arquivo `.env` com base no `.env.example`:
+
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
+Inicie a aplicação:
+
+```bash
+npm run dev
+```
+
+Acesse:
+
+```text
+http://localhost:5173
+```
+
 ## Banco de dados
 
 O projeto utiliza MySQL.
@@ -290,6 +365,14 @@ npm test
 
 Para os testes end-to-end é utilizado um banco separado.
 
+Antes de executar a suíte E2E, crie o banco de testes:
+
+```sql
+CREATE DATABASE IF NOT EXISTS wenlock_test
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+```
+
 Crie um `.env.test`:
 
 ```env
@@ -302,9 +385,10 @@ DB_PASSWORD=sua_senha
 DB_DATABASE=wenlock_test
 ```
 
-Depois execute:
+Aplique as migrations no ambiente de testes e depois execute a suíte E2E:
 
 ```bash
+npx cross-env NODE_ENV=test npm run migration:run
 npm run test:e2e
 ```
 
