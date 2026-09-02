@@ -9,6 +9,7 @@ import {
   Plus,
   Search,
   Trash2,
+  X,
 } from 'lucide-react';
 import {
   useEffect,
@@ -63,48 +64,12 @@ export function UsersPage() {
 
   const location = useLocation();
 
-  /* =========================================================
-     TOAST
-     ========================================================= */
-
   const [
     toast,
     setToast,
   ] = useState<ToastState | null>(
     null,
   );
-
-  useEffect(() => {
-    const state =
-      location.state as
-      | UsersLocationState
-      | null;
-
-    if (!state?.toast) {
-      return;
-    }
-
-    setToast(
-      state.toast,
-    );
-
-    navigate(
-      `${location.pathname}${location.search}`,
-      {
-        replace: true,
-        state: null,
-      },
-    );
-  }, [
-    location.pathname,
-    location.search,
-    location.state,
-    navigate,
-  ]);
-
-  /* =========================================================
-     LISTAGEM
-     ========================================================= */
 
   const [users, setUsers] =
     useState<User[]>([]);
@@ -136,20 +101,12 @@ export function UsersPage() {
     setRefreshKey,
   ] = useState(0);
 
-  /* =========================================================
-     VISUALIZAÇÃO
-     ========================================================= */
-
   const [
     viewingUserId,
     setViewingUserId,
   ] = useState<number | null>(
     null,
   );
-
-  /* =========================================================
-     EXCLUSÃO
-     ========================================================= */
 
   const [
     userToDelete,
@@ -171,6 +128,38 @@ export function UsersPage() {
   );
 
   /* =========================================================
+     TOAST
+     ========================================================= */
+
+  useEffect(() => {
+    const state =
+      location.state as
+        | UsersLocationState
+        | null;
+
+    if (!state?.toast) {
+      return;
+    }
+
+    setToast(
+      state.toast,
+    );
+
+    navigate(
+      `${location.pathname}${location.search}`,
+      {
+        replace: true,
+        state: null,
+      },
+    );
+  }, [
+    location.pathname,
+    location.search,
+    location.state,
+    navigate,
+  ]);
+
+  /* =========================================================
      PESQUISA COM DEBOUNCE
      ========================================================= */
 
@@ -178,10 +167,6 @@ export function UsersPage() {
     const timeout =
       window.setTimeout(
         () => {
-          /*
-           * Toda nova pesquisa começa
-           * novamente pela página 1.
-           */
           setPage(1);
 
           setDebouncedSearch(
@@ -253,6 +238,15 @@ export function UsersPage() {
   ]);
 
   /* =========================================================
+     PESQUISA
+     ========================================================= */
+
+  const handleClearSearch =
+    () => {
+      setSearch('');
+    };
+
+  /* =========================================================
      PAGINAÇÃO
      ========================================================= */
 
@@ -281,7 +275,7 @@ export function UsersPage() {
       if (
         meta.totalPages === 0 ||
         page >=
-        meta.totalPages
+          meta.totalPages
       ) {
         return;
       }
@@ -296,7 +290,7 @@ export function UsersPage() {
     if (
       meta.totalPages === 0 ||
       page >=
-      meta.totalPages
+        meta.totalPages
     ) {
       return;
     }
@@ -307,7 +301,7 @@ export function UsersPage() {
   };
 
   /* =========================================================
-     VISUALIZAR
+     VISUALIZAÇÃO
      ========================================================= */
 
   const handleOpenView = (
@@ -326,7 +320,7 @@ export function UsersPage() {
     };
 
   /* =========================================================
-     EXCLUIR
+     EXCLUSÃO
      ========================================================= */
 
   const handleOpenDelete = (
@@ -369,9 +363,6 @@ export function UsersPage() {
           null,
         );
 
-        /*
-         * Feedback visual de sucesso.
-         */
         setToast({
           type: 'success',
           message:
@@ -387,16 +378,12 @@ export function UsersPage() {
           return;
         }
 
-        /*
-         * Permanecendo na mesma página,
-         * forçamos nova consulta à API.
-         */
         setRefreshKey(
           (current) =>
             current + 1,
         );
       } catch (
-      requestError: unknown
+        requestError: unknown
       ) {
         if (
           axios.isAxiosError<ApiErrorResponse>(
@@ -447,10 +434,6 @@ export function UsersPage() {
     <section
       className={styles.page}
     >
-      {/* =====================================================
-          TÍTULO
-          ===================================================== */}
-
       <h1
         className={
           styles.pageTitle
@@ -468,6 +451,10 @@ export function UsersPage() {
           styles.toolbar
         }
       >
+        {/* ===================================================
+            PESQUISA
+            =================================================== */}
+
         <div
           className={
             styles.searchWrapper
@@ -475,13 +462,14 @@ export function UsersPage() {
         >
           <Search
             size={17}
+            strokeWidth={1.8}
             className={
               styles.searchIcon
             }
           />
 
           <input
-            type="search"
+            type="text"
             value={search}
             onChange={(event) =>
               setSearch(
@@ -494,6 +482,25 @@ export function UsersPage() {
             }
             aria-label="Pesquisar usuário por nome"
           />
+
+          {search.length > 0 && (
+            <button
+              type="button"
+              className={
+                styles.clearSearchButton
+              }
+              onClick={
+                handleClearSearch
+              }
+              title="Limpar pesquisa"
+              aria-label="Limpar pesquisa"
+            >
+              <X
+                size={18}
+                strokeWidth={1.8}
+              />
+            </button>
+          )}
         </div>
 
         <Link
@@ -509,7 +516,7 @@ export function UsersPage() {
       </div>
 
       {/* =====================================================
-          ERRO DA LISTAGEM
+          ERRO
           ===================================================== */}
 
       {error && (
@@ -571,8 +578,6 @@ export function UsersPage() {
                           styles.actions
                         }
                       >
-                        {/* VISUALIZAR */}
-
                         <button
                           type="button"
                           className={
@@ -591,8 +596,6 @@ export function UsersPage() {
                           />
                         </button>
 
-                        {/* EDITAR */}
-
                         <button
                           type="button"
                           className={
@@ -610,8 +613,6 @@ export function UsersPage() {
                             size={17}
                           />
                         </button>
-
-                        {/* EXCLUIR */}
 
                         <button
                           type="button"
@@ -653,7 +654,7 @@ export function UsersPage() {
         )}
 
         {/* ===================================================
-            NENHUM RESULTADO
+            EMPTY STATE
             =================================================== */}
 
         {!loading &&
@@ -747,8 +748,6 @@ export function UsersPage() {
                   styles.paginationNavigation
                 }
               >
-                {/* PRIMEIRA */}
-
                 <button
                   type="button"
                   className={
@@ -767,8 +766,6 @@ export function UsersPage() {
                     size={15}
                   />
                 </button>
-
-                {/* ANTERIOR */}
 
                 <button
                   type="button"
@@ -789,8 +786,6 @@ export function UsersPage() {
                   />
                 </button>
 
-                {/* PÁGINA ATUAL */}
-
                 <span
                   className={
                     styles.currentPage
@@ -799,8 +794,6 @@ export function UsersPage() {
                 >
                   {meta.page}
                 </span>
-
-                {/* PRÓXIMA */}
 
                 <button
                   type="button"
@@ -812,9 +805,9 @@ export function UsersPage() {
                   }
                   disabled={
                     meta.totalPages ===
-                    0 ||
+                      0 ||
                     page >=
-                    meta.totalPages
+                      meta.totalPages
                   }
                   aria-label="Próxima página"
                   title="Próxima página"
@@ -823,8 +816,6 @@ export function UsersPage() {
                     size={15}
                   />
                 </button>
-
-                {/* ÚLTIMA */}
 
                 <button
                   type="button"
@@ -836,9 +827,9 @@ export function UsersPage() {
                   }
                   disabled={
                     meta.totalPages ===
-                    0 ||
+                      0 ||
                     page >=
-                    meta.totalPages
+                      meta.totalPages
                   }
                   aria-label="Última página"
                   title="Última página"

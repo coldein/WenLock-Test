@@ -37,8 +37,41 @@
 .searchWrapper {
     position: relative;
 
-    width: 175px;
+    width: 198px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+
+    border: 1px solid var(--color-primary);
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.15);
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 }
+
+.searchWrapper:hover {
+    border-color:
+        var(--color-primary-dark);
+}
+
+.searchWrapper:focus-within {
+    border-color:
+        var(--color-primary);
+
+    box-shadow:
+        0 0 0 1px var(--color-primary);
+}
+
+/* =========================================================
+   ÍCONE DA PESQUISA
+   ========================================================= */
 
 .searchIcon {
     position: absolute;
@@ -46,9 +79,11 @@
     top: 50%;
     left: 11px;
 
-    color: var(--color-sidebar);
+    color:
+        var(--color-sidebar);
 
-    transform: translateY(-50%);
+    transform:
+        translateY(-50%);
 
     pointer-events: none;
 
@@ -56,59 +91,96 @@
         color 0.15s ease;
 }
 
+.searchWrapper:hover .searchIcon,
+.searchWrapper:focus-within .searchIcon {
+    color:
+        var(--color-primary-dark);
+}
+
+/* =========================================================
+   INPUT DA PESQUISA
+   ========================================================= */
+
 .searchInput {
     width: 100%;
-    height: 36px;
+    height: 100%;
 
     padding:
-        0 30px 0 33px;
+        0 38px 0 35px;
 
-    border: 1px solid #d5dadd;
-    border-radius: 4px;
+    border: 0;
+    outline: 0;
 
-    outline: none;
+    background: transparent;
 
-    background: var(--color-surface);
+    color:
+        var(--color-text);
 
-    color: var(--color-text);
-
+    font-family: inherit;
     font-size: 11px;
     font-weight: 400;
-
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.13);
-
-    transition:
-        border-color 0.15s ease,
-        box-shadow 0.15s ease,
-        background 0.15s ease;
 }
 
 .searchInput::placeholder {
     color: #6f7d7d;
-}
 
-.searchWrapper:hover .searchInput {
-    border-color: var(--color-primary);
-}
-
-.searchWrapper:hover .searchIcon {
-    color: var(--color-primary-dark);
-}
-
-.searchInput:focus {
-    border-color: var(--color-primary);
-
-    box-shadow:
-        0 0 0 1px var(--color-primary);
-}
-
-.searchWrapper:focus-within .searchIcon {
-    color: var(--color-primary-dark);
+    opacity: 1;
 }
 
 .searchInput::-webkit-search-cancel-button {
+    display: none;
+}
+
+/* =========================================================
+   BOTÃO LIMPAR PESQUISA
+   ========================================================= */
+
+.clearSearchButton {
+    position: absolute;
+
+    top: 50%;
+    right: 6px;
+
+    width: 28px;
+    height: 28px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 3px;
+
+    background: transparent;
+
+    color: #6f7d7d;
+
     cursor: pointer;
+
+    transform:
+        translateY(-50%);
+
+    transition:
+        color 0.15s ease,
+        background 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.clearSearchButton:hover {
+    color:
+        var(--color-primary-dark);
+
+    background:
+        rgba(0, 170, 193, 0.07);
+}
+
+.clearSearchButton:focus-visible {
+    outline:
+        2px solid var(--color-primary);
+
+    outline-offset: 1px;
 }
 
 /* =========================================================
@@ -129,7 +201,9 @@
     border: 0;
     border-radius: 4px;
 
-    background: var(--color-primary-dark);
+    background:
+        var(--color-primary-dark);
+
     color: #ffffff;
 
     font-size: 11px;
@@ -142,11 +216,14 @@
 }
 
 .createButton:hover {
-    background: var(--color-primary-hover);
+    background:
+        var(--color-primary-hover);
 }
 
 .createButton:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline:
+        2px solid var(--color-primary);
+
     outline-offset: 2px;
 }
 
@@ -164,7 +241,8 @@
     background:
         rgba(176, 0, 32, 0.08);
 
-    color: var(--color-danger);
+    color:
+        var(--color-danger);
 
     font-size: 11px;
     font-weight: 500;
@@ -188,6 +266,7 @@
     width: 100%;
 
     border-collapse: separate;
+
     border-spacing: 0 8px;
 
     table-layout: fixed;
@@ -202,7 +281,9 @@
 
     padding: 0 11px;
 
-    background: var(--color-sidebar);
+    background:
+        var(--color-sidebar);
+
     color: #ffffff;
 
     text-align: left;
@@ -243,11 +324,17 @@
 
     padding: 0 11px;
 
-    background: var(--color-surface);
-    color: var(--color-text);
+    background:
+        var(--color-surface);
 
-    border-top: 1px solid #dfe3e5;
-    border-bottom: 1px solid #dfe3e5;
+    color:
+        var(--color-text);
+
+    border-top:
+        1px solid #dfe3e5;
+
+    border-bottom:
+        1px solid #dfe3e5;
 
     font-size: 11px;
     font-weight: 400;
@@ -257,14 +344,16 @@
 }
 
 .table tbody td:first-child {
-    border-left: 1px solid #dfe3e5;
+    border-left:
+        1px solid #dfe3e5;
 
     border-radius:
         4px 0 0 4px;
 }
 
 .table tbody td:last-child {
-    border-right: 1px solid #dfe3e5;
+    border-right:
+        1px solid #dfe3e5;
 
     border-radius:
         0 4px 4px 0;
@@ -305,7 +394,9 @@
     border-radius: 3px;
 
     background: transparent;
-    color: var(--color-sidebar);
+
+    color:
+        var(--color-sidebar);
 
     cursor: pointer;
 
@@ -314,17 +405,18 @@
         color 0.15s ease;
 }
 
-/*
- * Hover seguindo o Adobe:
- * fundo ciano e ícone branco.
- */
+
 .actionButton:hover {
-    background: var(--color-primary);
+    background:
+        var(--color-primary);
+
     color: #ffffff;
 }
 
 .actionButton:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline:
+        2px solid var(--color-primary);
+
     outline-offset: 1px;
 }
 
@@ -339,12 +431,15 @@
     align-items: center;
     justify-content: center;
 
-    border: 1px solid #dfe3e5;
+    border:
+        1px solid #dfe3e5;
+
     border-radius: 3px;
 
     background: #ffffff;
 
-    color: var(--color-muted);
+    color:
+        var(--color-muted);
 
     font-size: 12px;
     font-weight: 500;
@@ -365,9 +460,12 @@
     align-items: center;
     justify-content: center;
 
-    padding: 34px 20px 42px;
+    padding:
+        34px 20px 42px;
 
-    border: 1px solid #dfe3e5;
+    border:
+        1px solid #dfe3e5;
+
     border-radius: 3px;
 
     background: #ffffff;
@@ -391,7 +489,8 @@
 .emptyTitle {
     margin: 0 0 5px;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     font-size: 16px;
     font-weight: 700;
@@ -403,7 +502,8 @@
 .emptyDescription {
     margin: 0;
 
-    color: var(--color-muted);
+    color:
+        var(--color-muted);
 
     font-size: 11px;
     font-weight: 400;
@@ -425,48 +525,68 @@
 
     margin-top: 12px;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     font-size: 11px;
     font-weight: 400;
 }
 
+/* TOTAL DE ITENS */
+
 .paginationSummary {
-    color: var(--color-text);
+    color:
+        var(--color-text);
+
     font-size: 11px;
     line-height: 16px;
+
+    white-space: nowrap;
 }
 
 .paginationSummary strong {
+    margin-left: 6px;
+
     font-weight: 600;
 }
+
+/* CONTROLES */
 
 .paginationControls {
     display: flex;
     align-items: center;
+
     gap: 8px;
 }
 
-.pageSizeText {
-    color: var(--color-text);
+/* ITENS POR PÁGINA */
+
+.pageSize {
+    display: flex;
+    align-items: center;
+
+    color:
+        var(--color-text);
+
     font-size: 11px;
     line-height: 16px;
+
     white-space: nowrap;
 }
 
-.pageSizeText strong {
+.pageSize strong {
+    margin-left: 7px;
+
     font-weight: 600;
 }
 
-.totalPagesText {
-    color: var(--color-text);
-    font-size: 11px;
-    line-height: 16px;
-    white-space: nowrap;
-}
+/* NAVEGAÇÃO */
 
-.totalPagesText strong {
-    font-weight: 600;
+.paginationNavigation {
+    display: flex;
+    align-items: center;
+
+    gap: 3px;
 }
 
 .paginationIconButton {
@@ -480,6 +600,7 @@
     padding: 0;
 
     border: 0;
+
     background: transparent;
 
     color: #6f7d7d;
@@ -493,13 +614,26 @@
 }
 
 .paginationIconButton:hover:not(:disabled) {
-    color: var(--color-sidebar);
+    color:
+        var(--color-sidebar);
+}
+
+.paginationIconButton:focus-visible {
+    border-radius: 3px;
+
+    outline:
+        2px solid var(--color-primary);
+
+    outline-offset: 1px;
 }
 
 .paginationIconButton:disabled {
     opacity: 0.35;
+
     cursor: not-allowed;
 }
+
+/* PÁGINA ATUAL */
 
 .currentPage {
     min-width: 32px;
@@ -513,12 +647,35 @@
 
     border-radius: 4px;
 
-    background: var(--color-primary-dark);
+    background:
+        var(--color-primary-dark);
+
     color: #ffffff;
 
     font-size: 11px;
     font-weight: 700;
     line-height: 16px;
+}
+
+/* TOTAL DE PÁGINAS */
+
+.totalPages {
+    display: flex;
+    align-items: center;
+
+    color:
+        var(--color-text);
+
+    font-size: 11px;
+    line-height: 16px;
+
+    white-space: nowrap;
+}
+
+.totalPages strong {
+    margin-left: 6px;
+
+    font-weight: 600;
 }
 
 /* =========================================================
@@ -527,8 +684,9 @@
 
 @media (max-width: 600px) {
     .toolbar {
-        align-items: stretch;
         flex-direction: column;
+
+        align-items: stretch;
     }
 
     .searchWrapper {
@@ -545,6 +703,7 @@
 
     .paginationBar {
         flex-direction: column;
+
         align-items: flex-start;
     }
 
