@@ -63,8 +63,15 @@
 
     flex-shrink: 0;
 
-    color:
-        var(--color-text);
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--color-text);
+
+    cursor: pointer;
 
     text-decoration: none;
 
@@ -73,8 +80,7 @@
 }
 
 .titleBack:hover {
-    color:
-        var(--color-primary-dark);
+    color: var(--color-primary-dark);
 }
 
 .titleBack:focus-visible {

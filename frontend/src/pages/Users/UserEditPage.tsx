@@ -71,7 +71,6 @@ export function UserEditPage() {
         setShowConfirmPassword,
     ] = useState(false);
 
- 
     const [
         cancelModalOpen,
         setCancelModalOpen,
@@ -210,7 +209,7 @@ export function UserEditPage() {
             payload.registration =
                 normalizedRegistration;
         }
-
+    
         if (data.password) {
             payload.password =
                 data.password;
@@ -224,7 +223,18 @@ export function UserEditPage() {
                 payload,
             );
 
-            navigate('/users');
+            navigate(
+                '/users',
+                {
+                    state: {
+                        toast: {
+                            type: 'success',
+                            message:
+                                'Dados salvos com sucesso!',
+                        },
+                    },
+                },
+            );
         } catch (error: unknown) {
             if (
                 axios.isAxiosError<ApiErrorResponse>(
@@ -272,7 +282,7 @@ export function UserEditPage() {
        ======================================================= */
 
     const handleCancel = () => {
-    
+
         if (!isDirty) {
             navigate('/users');
 
@@ -291,7 +301,18 @@ export function UserEditPage() {
         () => {
             setCancelModalOpen(false);
 
-            navigate('/users');
+            navigate(
+                '/users',
+                {
+                    state: {
+                        toast: {
+                            type: 'warning',
+                            message:
+                                'Edição cancelada',
+                        },
+                    },
+                },
+            );
         };
 
     /* =======================================================
@@ -484,19 +505,23 @@ export function UserEditPage() {
                     styles.titleRow
                 }
             >
-                <Link
-                    to="/users"
+                {}
+                <button
+                    type="button"
                     className={
                         styles.titleBack
                     }
                     title="Voltar"
                     aria-label="Voltar para usuários"
+                    onClick={
+                        handleCancel
+                    }
                 >
                     <ChevronLeft
                         size={27}
                         strokeWidth={2}
                     />
-                </Link>
+                </button>
 
                 <h1
                     className={
@@ -958,7 +983,6 @@ export function UserEditPage() {
                         styles.formActions
                     }
                 >
-                    {}
                     <button
                         type="button"
                         className={
@@ -997,6 +1021,7 @@ export function UserEditPage() {
                 open={
                     cancelModalOpen
                 }
+                message="As alterações realizadas não serão salvas"
                 onClose={
                     handleCloseCancelModal
                 }

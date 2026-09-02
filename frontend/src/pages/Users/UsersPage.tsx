@@ -16,6 +16,7 @@ import {
 } from 'react';
 import {
   Link,
+  useLocation,
   useNavigate,
 } from 'react-router-dom';
 
@@ -27,6 +28,10 @@ import type {
 } from '../../types/user';
 
 import { UserDeleteModal } from './UserDeleteModal';
+import {
+  UserToast,
+  type UserToastType,
+} from './UserToast';
 import { UserViewDrawer } from './UserViewDrawer';
 
 import styles from './UsersPage.module.css';
@@ -44,8 +49,62 @@ interface ApiErrorResponse {
   message?: string | string[];
 }
 
+interface ToastState {
+  type: UserToastType;
+  message: string;
+}
+
+interface UsersLocationState {
+  toast?: ToastState;
+}
+
 export function UsersPage() {
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  /* =========================================================
+     TOAST
+     ========================================================= */
+
+  const [
+    toast,
+    setToast,
+  ] = useState<ToastState | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const state =
+      location.state as
+      | UsersLocationState
+      | null;
+
+    if (!state?.toast) {
+      return;
+    }
+
+    setToast(
+      state.toast,
+    );
+
+    navigate(
+      `${location.pathname}${location.search}`,
+      {
+        replace: true,
+        state: null,
+      },
+    );
+  }, [
+    location.pathname,
+    location.search,
+    location.state,
+    navigate,
+  ]);
+
+  /* =========================================================
+     LISTAGEM
+     ========================================================= */
 
   const [users, setUsers] =
     useState<User[]>([]);
@@ -72,18 +131,15 @@ export function UsersPage() {
   const [error, setError] =
     useState<string | null>(null);
 
-  /*
-   * Incrementamos este valor quando
-   * precisamos recarregar a mesma página.
-   */
   const [
     refreshKey,
     setRefreshKey,
   ] = useState(0);
 
-  /*
-   * Usuário selecionado para visualização.
-   */
+  /* =========================================================
+     VISUALIZAÇÃO
+     ========================================================= */
+
   const [
     viewingUserId,
     setViewingUserId,
@@ -91,9 +147,10 @@ export function UsersPage() {
     null,
   );
 
-  /*
-   * Usuário selecionado para exclusão.
-   */
+  /* =========================================================
+     EXCLUSÃO
+     ========================================================= */
+
   const [
     userToDelete,
     setUserToDelete,
@@ -113,13 +170,18 @@ export function UsersPage() {
     null,
   );
 
-  /*
-   * Pesquisa automática com debounce.
-   */
+  /* =========================================================
+     PESQUISA COM DEBOUNCE
+     ========================================================= */
+
   useEffect(() => {
     const timeout =
       window.setTimeout(
         () => {
+          /*
+           * Toda nova pesquisa começa
+           * novamente pela página 1.
+           */
           setPage(1);
 
           setDebouncedSearch(
@@ -136,9 +198,10 @@ export function UsersPage() {
     };
   }, [search]);
 
-  /*
-   * Carrega a listagem.
-   */
+  /* =========================================================
+     CARREGAR USUÁRIOS
+     ========================================================= */
+
   useEffect(() => {
     const loadUsers =
       async () => {
@@ -150,8 +213,10 @@ export function UsersPage() {
             await usersService.findAll(
               {
                 page,
+
                 limit:
                   DEFAULT_PAGE_SIZE,
+
                 name:
                   debouncedSearch ||
                   undefined,
@@ -187,9 +252,10 @@ export function UsersPage() {
     refreshKey,
   ]);
 
-  /*
-   * Primeira página.
-   */
+  /* =========================================================
+     PAGINAÇÃO
+     ========================================================= */
+
   const handleFirstPage = () => {
     if (page <= 1) {
       return;
@@ -198,9 +264,6 @@ export function UsersPage() {
     setPage(1);
   };
 
-  /*
-   * Página anterior.
-   */
   const handlePreviousPage =
     () => {
       if (page <= 1) {
@@ -213,14 +276,12 @@ export function UsersPage() {
       );
     };
 
-  /*
-   * Próxima página.
-   */
   const handleNextPage =
     () => {
       if (
         meta.totalPages === 0 ||
-        page >= meta.totalPages
+        page >=
+        meta.totalPages
       ) {
         return;
       }
@@ -231,13 +292,11 @@ export function UsersPage() {
       );
     };
 
-  /*
-   * Última página.
-   */
   const handleLastPage = () => {
     if (
       meta.totalPages === 0 ||
-      page >= meta.totalPages
+      page >=
+      meta.totalPages
     ) {
       return;
     }
@@ -247,9 +306,10 @@ export function UsersPage() {
     );
   };
 
-  /*
-   * Abre o drawer de visualização.
-   */
+  /* =========================================================
+     VISUALIZAR
+     ========================================================= */
+
   const handleOpenView = (
     userId: number,
   ) => {
@@ -258,9 +318,6 @@ export function UsersPage() {
     );
   };
 
-  /*
-   * Fecha o drawer.
-   */
   const handleCloseView =
     () => {
       setViewingUserId(
@@ -268,9 +325,10 @@ export function UsersPage() {
       );
     };
 
-  /*
-   * Abre confirmação de exclusão.
-   */
+  /* =========================================================
+     EXCLUIR
+     ========================================================= */
+
   const handleOpenDelete = (
     user: User,
   ) => {
@@ -279,9 +337,6 @@ export function UsersPage() {
     setUserToDelete(user);
   };
 
-  /*
-   * Fecha confirmação de exclusão.
-   */
   const handleCloseDelete =
     () => {
       if (deleting) {
@@ -292,9 +347,6 @@ export function UsersPage() {
       setDeleteError(null);
     };
 
-  /*
-   * Confirma exclusão.
-   */
   const handleConfirmDelete =
     async () => {
       if (!userToDelete) {
@@ -309,11 +361,6 @@ export function UsersPage() {
           userToDelete.id,
         );
 
-        /*
-         * Se excluímos o último registro
-         * da página e não estamos na primeira,
-         * voltamos uma página.
-         */
         const shouldGoBack =
           users.length === 1 &&
           page > 1;
@@ -321,6 +368,15 @@ export function UsersPage() {
         setUserToDelete(
           null,
         );
+
+        /*
+         * Feedback visual de sucesso.
+         */
+        setToast({
+          type: 'success',
+          message:
+            'Usuário excluído com sucesso!',
+        });
 
         if (shouldGoBack) {
           setPage(
@@ -332,7 +388,8 @@ export function UsersPage() {
         }
 
         /*
-         * Recarrega a página atual.
+         * Permanecendo na mesma página,
+         * forçamos nova consulta à API.
          */
         setRefreshKey(
           (current) =>
@@ -390,6 +447,10 @@ export function UsersPage() {
     <section
       className={styles.page}
     >
+      {/* =====================================================
+          TÍTULO
+          ===================================================== */}
+
       <h1
         className={
           styles.pageTitle
@@ -397,6 +458,10 @@ export function UsersPage() {
       >
         Usuários
       </h1>
+
+      {/* =====================================================
+          TOOLBAR
+          ===================================================== */}
 
       <div
         className={
@@ -443,6 +508,10 @@ export function UsersPage() {
         </Link>
       </div>
 
+      {/* =====================================================
+          ERRO DA LISTAGEM
+          ===================================================== */}
+
       {error && (
         <div
           className={
@@ -452,6 +521,10 @@ export function UsersPage() {
           {error}
         </div>
       )}
+
+      {/* =====================================================
+          TABELA
+          ===================================================== */}
 
       <div
         className={
@@ -485,7 +558,9 @@ export function UsersPage() {
                 {users.map(
                   (user) => (
                     <tr
-                      key={user.id}
+                      key={
+                        user.id
+                      }
                     >
                       <td>
                         {user.name}
@@ -496,6 +571,8 @@ export function UsersPage() {
                           styles.actions
                         }
                       >
+                        {/* VISUALIZAR */}
+
                         <button
                           type="button"
                           className={
@@ -514,6 +591,8 @@ export function UsersPage() {
                           />
                         </button>
 
+                        {/* EDITAR */}
+
                         <button
                           type="button"
                           className={
@@ -531,6 +610,8 @@ export function UsersPage() {
                             size={17}
                           />
                         </button>
+
+                        {/* EXCLUIR */}
 
                         <button
                           type="button"
@@ -557,6 +638,10 @@ export function UsersPage() {
             )}
         </table>
 
+        {/* ===================================================
+            LOADING
+            =================================================== */}
+
         {loading && (
           <div
             className={
@@ -566,6 +651,10 @@ export function UsersPage() {
             Carregando usuários...
           </div>
         )}
+
+        {/* ===================================================
+            NENHUM RESULTADO
+            =================================================== */}
 
         {!loading &&
           !error &&
@@ -608,6 +697,10 @@ export function UsersPage() {
           )}
       </div>
 
+      {/* =====================================================
+          PAGINAÇÃO
+          ===================================================== */}
+
       {!loading &&
         !error &&
         meta.totalItems > 0 && (
@@ -622,7 +715,7 @@ export function UsersPage() {
               }
             >
               <span>
-                Total de itens{' '}
+                Total de itens
               </span>
 
               <strong>
@@ -654,6 +747,8 @@ export function UsersPage() {
                   styles.paginationNavigation
                 }
               >
+                {/* PRIMEIRA */}
+
                 <button
                   type="button"
                   className={
@@ -672,6 +767,8 @@ export function UsersPage() {
                     size={15}
                   />
                 </button>
+
+                {/* ANTERIOR */}
 
                 <button
                   type="button"
@@ -692,6 +789,8 @@ export function UsersPage() {
                   />
                 </button>
 
+                {/* PÁGINA ATUAL */}
+
                 <span
                   className={
                     styles.currentPage
@@ -700,6 +799,8 @@ export function UsersPage() {
                 >
                   {meta.page}
                 </span>
+
+                {/* PRÓXIMA */}
 
                 <button
                   type="button"
@@ -722,6 +823,8 @@ export function UsersPage() {
                     size={15}
                   />
                 </button>
+
+                {/* ÚLTIMA */}
 
                 <button
                   type="button"
@@ -763,17 +866,51 @@ export function UsersPage() {
           </div>
         )}
 
+      {/* =====================================================
+          TOAST
+          ===================================================== */}
+
+      {toast && (
+        <UserToast
+          type={
+            toast.type
+          }
+          message={
+            toast.message
+          }
+          onClose={() =>
+            setToast(null)
+          }
+        />
+      )}
+
+      {/* =====================================================
+          VISUALIZAÇÃO
+          ===================================================== */}
+
       <UserViewDrawer
-        userId={viewingUserId}
+        userId={
+          viewingUserId
+        }
         onClose={
           handleCloseView
         }
       />
 
+      {/* =====================================================
+          EXCLUSÃO
+          ===================================================== */}
+
       <UserDeleteModal
-        user={userToDelete}
-        deleting={deleting}
-        error={deleteError}
+        user={
+          userToDelete
+        }
+        deleting={
+          deleting
+        }
+        error={
+          deleteError
+        }
         onCancel={
           handleCloseDelete
         }

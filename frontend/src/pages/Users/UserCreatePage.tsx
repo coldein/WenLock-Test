@@ -95,7 +95,18 @@ export function UserCreatePage() {
                 password: data.password,
             });
 
-            navigate('/users');
+            navigate(
+                '/users',
+                {
+                    state: {
+                        toast: {
+                            type: 'success',
+                            message:
+                                'Dados salvos com sucesso!',
+                        },
+                    },
+                },
+            );
         } catch (error: unknown) {
             if (
                 axios.isAxiosError<ApiErrorResponse>(
@@ -159,7 +170,18 @@ export function UserCreatePage() {
         () => {
             setCancelModalOpen(false);
 
-            navigate('/users');
+            navigate(
+                '/users',
+                {
+                    state: {
+                        toast: {
+                            type: 'warning',
+                            message:
+                                'Cadastro cancelado',
+                        },
+                    },
+                },
+            );
         };
 
     return (
@@ -202,19 +224,23 @@ export function UserCreatePage() {
                     styles.titleRow
                 }
             >
-                <Link
-                    to="/users"
+                {}
+                <button
+                    type="button"
                     className={
                         styles.titleBack
                     }
                     title="Voltar"
                     aria-label="Voltar para usuários"
+                    onClick={
+                        handleCancel
+                    }
                 >
                     <ChevronLeft
                         size={27}
                         strokeWidth={2}
                     />
-                </Link>
+                </button>
 
                 <h1
                     className={
@@ -282,8 +308,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${errors.name
-                                ? styles.fieldControlError
-                                : ''
+                                    ? styles.fieldControlError
+                                    : ''
                                 }`}
                         >
                             <label
@@ -343,8 +369,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${errors.registration
-                                ? styles.fieldControlError
-                                : ''
+                                    ? styles.fieldControlError
+                                    : ''
                                 }`}
                         >
                             <label
@@ -408,8 +434,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${errors.email
-                                ? styles.fieldControlError
-                                : ''
+                                    ? styles.fieldControlError
+                                    : ''
                                 }`}
                         >
                             <label
@@ -493,8 +519,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${styles.passwordControl} ${errors.password
-                                ? styles.fieldControlError
-                                : ''
+                                    ? styles.fieldControlError
+                                    : ''
                                 }`}
                         >
                             <label
@@ -578,8 +604,8 @@ export function UserCreatePage() {
                     >
                         <div
                             className={`${styles.fieldControl} ${styles.passwordControl} ${errors.confirmPassword
-                                ? styles.fieldControlError
-                                : ''
+                                    ? styles.fieldControlError
+                                    : ''
                                 }`}
                         >
                             <label
@@ -657,7 +683,7 @@ export function UserCreatePage() {
                 </div>
 
                 {/* =================================================
-                    BOTÕES
+                    AÇÕES
                     ================================================= */}
 
                 <footer
@@ -665,7 +691,6 @@ export function UserCreatePage() {
                         styles.formActions
                     }
                 >
-                    { }
                     <button
                         type="button"
                         className={
@@ -696,7 +721,7 @@ export function UserCreatePage() {
             </form>
 
             {/* ===================================================
-                MODAL DE CANCELAMENTO
+                CONFIRMAÇÃO DE CANCELAMENTO
                 =================================================== */}
 
             <UserCancelModal
