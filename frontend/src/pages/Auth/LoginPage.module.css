@@ -1,0 +1,521 @@
+/* =========================================================
+   PÁGINA
+   ========================================================= */
+
+.page {
+    width: 100%;
+    min-height: 100dvh;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+
+    background:
+        var(
+            --color-sidebar,
+            #0d1931
+        );
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   ESTRUTURA PRINCIPAL
+   ========================================================= */
+
+.loginStage {
+    width: 100%;
+    min-height: 100dvh;
+
+    display: grid;
+
+    grid-template-columns:
+        55% 45%;
+
+    background:
+        var(
+            --color-sidebar,
+            #0d1931
+        );
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   MARCA
+   ========================================================= */
+
+.brandArea {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        60px
+        50px;
+}
+
+.brandLogo {
+    display: block;
+
+    width: min(
+        430px,
+        72%
+    );
+
+    max-width: 100%;
+
+    height: auto;
+
+    object-fit: contain;
+}
+
+/* =========================================================
+   ÁREA DO LOGIN
+   ========================================================= */
+
+.formArea {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        50px
+        60px
+        50px
+        20px;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.loginCard {
+    width: 100%;
+    max-width: 530px;
+
+    min-height: 555px;
+
+    padding:
+        48px
+        40px;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0, 0, 0, 0.12);
+
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.header {
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin:
+        0
+        0
+        24px;
+
+    color:
+        var(
+            --color-primary-dark,
+            #0290a4
+        );
+
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.header p {
+    margin: 0;
+
+    color:
+        var(
+            --color-text,
+            #173c3b
+        );
+
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 26px;
+}
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px;
+}
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.field,
+.passwordField {
+    position: relative;
+
+    width: 100%;
+}
+
+.field input,
+.passwordField input {
+    width: 100%;
+    height: 48px;
+
+    padding:
+        0
+        12px;
+
+    border:
+        1px solid
+        #d9dede;
+
+    border-radius: 4px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color:
+        var(
+            --color-text,
+            #173c3b
+        );
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 400;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.passwordField input {
+    padding-right: 45px;
+}
+
+.field input::placeholder,
+.passwordField input::placeholder {
+    color: #80908e;
+
+    opacity: 1;
+}
+
+.field input:focus,
+.passwordField input:focus {
+    border-color:
+        var(
+            --color-primary,
+            #00aac1
+        );
+
+    box-shadow:
+        0 0 0 1px
+        rgba(
+            0,
+            170,
+            193,
+            0.16
+        );
+}
+
+/* =========================================================
+   MOSTRAR / OCULTAR SENHA
+   ========================================================= */
+
+.passwordToggle {
+    position: absolute;
+
+    top: 50%;
+    right: 8px;
+
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 3px;
+
+    background: transparent;
+
+    color: #72817f;
+
+    cursor: pointer;
+
+    transform:
+        translateY(-50%);
+
+    transition:
+        color 0.15s ease,
+        background 0.15s ease;
+}
+
+.passwordToggle:hover {
+    color:
+        var(
+            --color-primary-dark,
+            #0290a4
+        );
+
+    background:
+        rgba(
+            0,
+            170,
+            193,
+            0.05
+        );
+}
+
+.passwordToggle:focus-visible {
+    outline:
+        2px solid
+        var(
+            --color-primary,
+            #00aac1
+        );
+
+    outline-offset: 1px;
+}
+
+/* =========================================================
+   ENTRAR
+   ========================================================= */
+
+.submitButton {
+    width: 100%;
+    height: 48px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 4px;
+
+    background:
+        var(
+            --color-primary-dark,
+            #0290a4
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.1s ease;
+}
+
+.submitButton:hover {
+    background:
+        var(
+            --color-primary-hover,
+            #00606d
+        );
+}
+
+.submitButton:active {
+    transform:
+        translateY(1px);
+}
+
+.submitButton:focus-visible {
+    outline:
+        2px solid
+        var(
+            --color-primary,
+            #00aac1
+        );
+
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   ESQUECI MINHA SENHA
+   ========================================================= */
+
+.forgotPassword {
+    align-self: center;
+
+    margin-top: -5px;
+
+    padding:
+        3px
+        5px;
+
+    border: 0;
+
+    background: transparent;
+
+    color:
+        var(
+            --color-primary-dark,
+            #0290a4
+        );
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: default;
+}
+
+/* =========================================================
+   ACESSIBILIDADE
+   ========================================================= */
+
+.srOnly {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+    margin: -1px;
+
+    overflow: hidden;
+
+    clip: rect(
+        0,
+        0,
+        0,
+        0
+    );
+
+    white-space: nowrap;
+
+    border: 0;
+}
+
+/* =========================================================
+   NOTEBOOK / TABLET
+   ========================================================= */
+
+@media (
+    max-width: 1100px
+) {
+    .loginStage {
+        grid-template-columns:
+            45% 55%;
+    }
+
+    .brandLogo {
+        width: 85%;
+    }
+
+    .brandArea {
+        padding:
+            40px
+            25px;
+    }
+
+    .formArea {
+        padding:
+            40px
+            35px;
+    }
+
+    .loginCard {
+        min-height: 510px;
+
+        padding:
+            40px
+            32px;
+    }
+
+    .header h1 {
+        font-size: 38px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 760px
+) {
+    .page {
+        min-height: 100dvh;
+
+        overflow-y: auto;
+    }
+
+    .loginStage {
+        min-height: 100dvh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding:
+            30px
+            20px;
+
+        box-sizing: border-box;
+    }
+
+    .brandArea {
+        display: none;
+    }
+
+    .formArea {
+        width: 100%;
+
+        padding: 0;
+    }
+
+    .loginCard {
+        max-width: 480px;
+        min-height: auto;
+
+        padding:
+            38px
+            28px;
+    }
+
+    .header h1 {
+        font-size: 34px;
+    }
+
+    .header p {
+        font-size: 16px;
+    }
+}
